@@ -6,6 +6,7 @@ app = gui("appJar Testing")
 #app.setGeometry("600x400")
 
 app.startScrollPane("sp1")
+select from
 for x in range(0,40):
     label_name = "l" + str(x)
     app.addLabel(label_name, "This is inside scroll pane.")
