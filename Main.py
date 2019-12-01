@@ -1,6 +1,10 @@
+from numpy import sin, pi, arange
 from appJar import gui
+import random
 from time import strftime, gmtime
 import matplotlib.pyplot as plt
+
+count = 0
 
 
 # Функция получения времени для Statusbar'a
@@ -9,47 +13,106 @@ def timeSt():
     app.setStatusbar(t)
 
 
+# Функция загрузки имён полей
+def downlColumNames():
+    pass
+    app.changeOptionBox('Таблица 1', newOptions, callFunction=False)
+    app.changeOptionBox('Таблица 2', newOptions, callFunction=False)
+    # Забираем имена полей из БД , парсим и вставляем их в changeOptionBox выбора полей для JOIN
+
+
+# Функция загрузки списка таблиц
+def downlTablesNames():
+    pass
+    conDb
+    app.changeOptionBox("Поле таблицы 1", newOptions, callFunction=False)
+    app.changeOptionBox("Поле таблицы 2", newOptions, callFunction=False)
+    # Забираем имена доступных таблиц из БД, парсим и вставляем их в changeOptionBox выбора
+
+
 # Функция соединения с БД
 def connectToDb():
     db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
         'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     global conDb
     try:
+        conDb = ''
         pass
     except:
+        # Здесь к каждой ошибке создаём свое окно infoBox
         pass
     else:
         app.infoBox('Результат', 'Покдключение к БД установлено')
+    downlTablesNames()
+    downlColumNames()
 
 
-# Функция извлечения данных из БД в графики
-def showTableInfo():
-    app.changeOptionBox('Список результатов')
+# Функция вывода данных из БД в графики
+def showGrafInfo():
+    # Берёт инфу из JOIN выбранных колонн, парсит вставляет в параметры графика, создаёт график
 
+    app.getOptionBox("Таблица 1")
+    app.getOptionBox("Таблица 2")
+    app.getOptionBox("Поле таблицы 1")
+    app.getOptionBox("Поле таблицы 2")
+    app.getOptionBox("Тип графика")
+
+
+def getXY():
+    x = arange(0.0, 3.0, 0.01)
+    y = sin(random.randint(1, 10) * pi * x)
+    return x, y
+
+
+def generate():
+    # *getXY() will unpack the two return values
+    # and pass them as separate parameters
+    app.updatePlot("p1", *getXY())
+    showLabels()
+
+
+def showLabels():
+    axes.legend(['The curve'])
+    axes.set_xlabel("X Axes")
+    axes.set_ylabel("Y Axes")
+    app.refreshPlot("p1")
 
 def press(button):
     if button == 'Подключиться к БД':
-        connectDb()
+        connectToDb()
         app.hideSubWindow('Настройки подключения к БД')
     elif button == 'Очистить поля':
         app.clearEntry("Пользователь")
         app.clearEntry("Пароль")
     elif button == 'Создать График':
-        selectTableInfo()
-        app.showSubWindow("Графики")
+        showGrafInfo()
+# Здесь будет функция получния данных из таблиц вместо getXY
+        app.updatePlot("p1", *getXY())
+        showLabels()
+        app.showSubWindow("График")
     elif button == 'Выход':
         app.stop()
     elif button == 'Выход из настроек':
         app.hideSubWindow('Настройки подключения к БД')
     elif button == 'SETTINGS':
         app.showSubWindow('Настройки подключения к БД')
+    elif button == "Зактрыть график":
+        app.hideSubWindow("График")
+
 
 
 # Основное окно
 app = gui('Project-X', 'Fullscreen')
 
+# Временное окно входа в программу
+# app.showSplash("Project-X", fill='blue', stripe='black', fg='white', font=44)
+
 # Выпадающее меню графиков
-app.addLabelOptionBox("Типы графиков", options={1: "Pie"})
+app.addLabelOptionBox("Таблица 1", ["A","Б" ])
+app.addLabelOptionBox("Таблица 2", ["Б","S" ])
+app.addLabelOptionBox("Поле таблицы 1", ["1", '2' ])
+app.addLabelOptionBox("Поле таблицы 2", ["2", " 3"])
+app.addLabelOptionBox("Тип графика", ["Pie", "График" ])
 
 # Кнопки
 app.addButtons(['Выход', 'Создать График'], press)
@@ -64,6 +127,7 @@ app.startSubWindow('Настройки подключения к БД', 'Нас�
                    transient=True,
                    grouped=True)
 
+# Кнопки
 app.addButtons(['Выход из настроек', 'Подключиться к БД', 'Очистить поля', ], press)
 
 # Названия строк
@@ -76,6 +140,9 @@ app.addLabelEntry('Название БД')
 # Подписывает действие внутри строки
 app.setEntryDefault('Пользователь', 'Введите имя пользователя')
 app.setEntryDefault('Пароль', 'Введите пароль')
+app.setEntryDefault('IP', 'Введите IP')
+app.setEntryDefault('Port', 'Введите PORT')
+app.setEntryDefault('Название БД', 'Введите название БД')
 
 # Устанавливает курсор на строке ввода
 app.setFocus('Пользователь')
@@ -85,4 +152,35 @@ app.setSize("Fullscreen")
 
 app.stopSubWindow()
 
+# Окно показа графика
+app.startSubWindow("График", "График")
+
+axes = app.addPlot('p1', *getXY())
+
+showLabels()
+
+# app.addButton("Generate", generate)
+
+# Кнопки
+app.addButtons(["Зактрыть график"], press)
+
+# Устанавливает размер окна
+app.setSize("Fullscreen")
+
+app.stopSubWindow()
+
 app.go()
+
+# Пример окна со скроллингом
+# app = gui("appJar Testing")
+# #app.setStretch("none")
+# #app.setFont(15)
+# #app.setGeometry("600x400")
+#
+# app.startScrollPane("sp1")
+# for x in range(0,40):
+#     label_name = "l" + str(x)
+#     app.addLabel(label_name, "This is inside scroll pane.")
+# app.stopScrollPane()
+#
+# app.go()
