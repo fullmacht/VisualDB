@@ -61,7 +61,14 @@ def showGrafInfo():
 def getXY():
     x = arange(0.0, 3.0, 0.01)
     y = sin(random.randint(1, 10) * pi * x)
-    return x, y
+    if str(app.getOptionBox("Тип графика")) == "График":
+        return x, y
+    if str(app.getOptionBox("Тип графика")) == "Pie":
+        global a
+        global b
+        a = 55
+        b = 99
+        return a, b
 
 
 def generate():
@@ -77,6 +84,7 @@ def showLabels():
     axes.set_ylabel("Y Axes")
     app.refreshPlot("p1")
 
+
 def press(button):
     if button == 'Подключиться к БД':
         connectToDb()
@@ -85,11 +93,17 @@ def press(button):
         app.clearEntry("Пользователь")
         app.clearEntry("Пароль")
     elif button == 'Создать График':
-        showGrafInfo()
-# Здесь будет функция получния данных из таблиц вместо getXY
-        app.updatePlot("p1", *getXY())
-        showLabels()
-        app.showSubWindow("График")
+        if str(app.getOptionBox("Тип графика")) == "График":
+            showGrafInfo()
+            # Здесь будет функция получния данных из таблиц вместо getXY
+            app.updatePlot("p1", *getXY())
+            showLabels()
+            app.showSubWindow("График")
+        if str(app.getOptionBox("Тип графика")) == "Pie":
+            a,b = getXY()
+            app.setPieChart(title="Pie", name="0", value=99)
+            app.setPieChart(title="Pie", name="b", value=1)
+            app.showSubWindow("График Pie")
     elif button == 'Выход':
         app.stop()
     elif button == 'Выход из настроек':
@@ -98,7 +112,8 @@ def press(button):
         app.showSubWindow('Настройки подключения к БД')
     elif button == "Зактрыть график":
         app.hideSubWindow("График")
-
+    elif button == "Закрыть график Pie":
+        app.hideSubWindow("График Pie")
 
 
 # Основное окно
@@ -108,11 +123,12 @@ app = gui('Project-X', 'Fullscreen')
 # app.showSplash("Project-X", fill='blue', stripe='black', fg='white', font=44)
 
 # Выпадающее меню графиков
-app.addLabelOptionBox("Таблица 1", ["A","Б" ])
-app.addLabelOptionBox("Таблица 2", ["Б","S" ])
-app.addLabelOptionBox("Поле таблицы 1", ["1", '2' ])
+app.addLabelOptionBox("Таблица 1", ["A", "Б"])
+app.addLabelOptionBox("Таблица 2", ["Б", "S"])
+app.addLabelOptionBox("Поле таблицы 1", ["1", '2'])
 app.addLabelOptionBox("Поле таблицы 2", ["2", " 3"])
-app.addLabelOptionBox("Тип графика", ["Pie", "График" ])
+app.addLabelOptionBox("Тип JOIN", ["FULL", "LEFT", "RIGHT", "INNER"])
+app.addLabelOptionBox("Тип графика", ["Pie", "График"])
 
 # Кнопки
 app.addButtons(['Выход', 'Создать График'], press)
@@ -155,7 +171,7 @@ app.stopSubWindow()
 # Окно показа графика
 app.startSubWindow("График", "График")
 
-axes = app.addPlot('p1', *getXY())
+axes = app.addPlot('p1', [1,2],[3,4])
 
 showLabels()
 
@@ -165,9 +181,19 @@ showLabels()
 app.addButtons(["Зактрыть график"], press)
 
 # Устанавливает размер окна
-app.setSize("Fullscreen")
 
 app.stopSubWindow()
+
+# Окно Графика тип Pie
+app.startSubWindow("График Pie", "График Pie")
+
+app.addPieChart("Pie", {"0": 50})
+# Кнопки
+app.addButtons(["Закрыть график Pie"], press)
+
+# Устанавливает размер окна
+app.stopSubWindow()
+app.exitFullscreen()
 
 app.go()
 
