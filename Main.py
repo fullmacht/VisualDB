@@ -111,17 +111,17 @@ def press(button):
             subWindowName = str(subWindowName)
             pieName = str(pieName)
             # Окно Графика тип Pie
-            app.startSubWindow("График Pie" + " " + subWindowName, "График Pie" + " " + subWindowName)
+            app.startSubWindow("График Pie" + " " + "№" + subWindowName, "График Pie" + " " + "№" + subWindowName)
 
-            app.addPieChart("График Pie" + " " + pieName, {table1Name: a, table2Name: b})
+            app.addPieChart("График Pie" + " " + "№" + pieName, {table1Name: a, table2Name: b})
             # Кнопки
-            app.addButtons(["Закрыть график Pie" + " " + pieName], push)
+            app.addButtons(["Закрыть график Pie" + " " + "№" + pieName], push)
 
             # Устанавливает размер окна
             app.stopSubWindow()
             # app.setPieChart(title="График Pie" + " " + pieName, name=table1Name, value=a)
             # app.setPieChart(title="График Pie" + " " + pieName, name=table2Name, value=b)
-            app.showSubWindow("График Pie" + " " + subWindowName)
+            app.showSubWindow("График Pie" + " " + "№" + subWindowName)
             pieName = int(pieName)
             subWindowName = int(subWindowName)
     elif button == 'Выход':
@@ -141,9 +141,9 @@ def push(btn):
         if type(pieName) is int:
             subWindowName = str(subWindowName)
             pieName = str(pieName)
-            if btn == "Закрыть график Pie" + ' ' + pieName:
-                app.removePieChart("График Pie" + " " + pieName)
-                app.destroySubWindow("График Pie" + " " + subWindowName)
+            if btn == "Закрыть график Pie" + ' ' + "№" + pieName:
+                app.removePieChart("График Pie" + " " + "№" + pieName)
+                app.destroySubWindow("График Pie" + " " + "№" + subWindowName)
                 subWindowName = int(subWindowName)
                 pieName = int(pieName)
 # Основное окно
