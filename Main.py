@@ -4,7 +4,6 @@ import random
 from time import strftime, gmtime
 import matplotlib.pyplot as plt
 
-count = 0
 table1Name = 'Таблица 1'
 table2Name = 'Таблица 2'
 pieName = 0
@@ -108,6 +107,7 @@ def press(button):
             showLabels()
             app.showSubWindow("График")
         if str(app.getOptionBox("Тип графика")) == "Pie":
+            a, b = getXY()
             subWindowName += 1
             pieName += 1
             subWindowName = str(subWindowName)
@@ -115,17 +115,14 @@ def press(button):
             # Окно Графика тип Pie
             app.startSubWindow("График Pie" + " " + subWindowName, "График Pie" + " " + subWindowName)
 
-            app.addPieChart("График Pie" + " " + pieName, {table1Name: 50})
+            app.addPieChart("График Pie" + " " + pieName, {table1Name: a, table2Name: b})
             # Кнопки
             app.addButtons(["Закрыть график Pie" + " " + pieName], push)
 
             # Устанавливает размер окна
             app.stopSubWindow()
-            a,b = getXY()
-
-            table1Name = 'Таблица 3'
-            app.setPieChart(title="График Pie" + " " + pieName, name=table1Name, value=a)
-            app.setPieChart(title="График Pie" + " " + pieName, name=table2Name, value=b)
+            # app.setPieChart(title="График Pie" + " " + pieName, name=table1Name, value=a)
+            # app.setPieChart(title="График Pie" + " " + pieName, name=table2Name, value=b)
             app.showSubWindow("График Pie" + " " + subWindowName)
             pieName = int(pieName)
             subWindowName = int(subWindowName)
