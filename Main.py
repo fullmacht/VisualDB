@@ -58,7 +58,7 @@ def showGrafInfo():
     app.getOptionBox("Поле таблицы 2")
     app.getOptionBox("Тип графика")
 
-
+#Здесь будут браться значения из таблиц для вывода в графики
 def getXY():
     x = arange(0.0, 3.0, 0.01)
     y = sin(random.randint(1, 10) * pi * x)
@@ -73,8 +73,6 @@ def getXY():
 
 
 def generate():
-    # *getXY() will unpack the two return values
-    # and pass them as separate parameters
     app.updatePlot("p1", *getXY())
     showLabels()
 
