@@ -5,8 +5,8 @@ from time import strftime, gmtime
 import matplotlib.pyplot as plt
 
 count = 0
-
-
+table1Name = 'Таблица 1'
+table2Name = 'Таблица 2'
 # Функция получения времени для Statusbar'a
 def timeSt():
     t = strftime("%a, %d %b %Y %H:%M:%S", gmtime())
@@ -101,8 +101,11 @@ def press(button):
             app.showSubWindow("График")
         if str(app.getOptionBox("Тип графика")) == "Pie":
             a,b = getXY()
-            app.setPieChart(title="Pie", name="0", value=99)
-            app.setPieChart(title="Pie", name="b", value=1)
+            global table1Name
+            global table2Name
+            table1Name = 'Таблица 3'
+            app.setPieChart(title="Pie", name=table1Name, value=a)
+            app.setPieChart(title="Pie", name=table2Name, value=b)
             app.showSubWindow("График Pie")
     elif button == 'Выход':
         app.stop()
@@ -187,7 +190,7 @@ app.stopSubWindow()
 # Окно Графика тип Pie
 app.startSubWindow("График Pie", "График Pie")
 
-app.addPieChart("Pie", {"0": 50})
+app.addPieChart("Pie", {table1Name: 50})
 # Кнопки
 app.addButtons(["Закрыть график Pie"], press)
 
