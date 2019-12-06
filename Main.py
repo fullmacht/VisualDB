@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 count = 0
 table1Name = 'Таблица 1'
 table2Name = 'Таблица 2'
+pieName = 0
+subWindowName = 0
 # Функция получения времени для Statusbar'a
 def timeSt():
     t = strftime("%a, %d %b %Y %H:%M:%S", gmtime())
@@ -86,6 +88,12 @@ def showLabels():
 
 
 def press(button):
+
+    global table1Name
+    global table2Name
+    global subWindowName
+    global pieName
+
     if button == 'Подключиться к БД':
         connectToDb()
         app.hideSubWindow('Настройки подключения к БД')
@@ -100,13 +108,27 @@ def press(button):
             showLabels()
             app.showSubWindow("График")
         if str(app.getOptionBox("Тип графика")) == "Pie":
+            subWindowName += 1
+            pieName += 1
+            subWindowName = str(subWindowName)
+            pieName = str(pieName)
+            # Окно Графика тип Pie
+            app.startSubWindow("График Pie" + " " + subWindowName, "График Pie" + " " + subWindowName)
+
+            app.addPieChart("График Pie" + " " + pieName, {table1Name: 50})
+            # Кнопки
+            app.addButtons(["Закрыть график Pie" + " " + pieName], push)
+
+            # Устанавливает размер окна
+            app.stopSubWindow()
             a,b = getXY()
-            global table1Name
-            global table2Name
+
             table1Name = 'Таблица 3'
-            app.setPieChart(title="Pie", name=table1Name, value=a)
-            app.setPieChart(title="Pie", name=table2Name, value=b)
-            app.showSubWindow("График Pie")
+            app.setPieChart(title="График Pie" + " " + pieName, name=table1Name, value=a)
+            app.setPieChart(title="График Pie" + " " + pieName, name=table2Name, value=b)
+            app.showSubWindow("График Pie" + " " + subWindowName)
+            pieName = int(pieName)
+            subWindowName = int(subWindowName)
     elif button == 'Выход':
         app.stop()
     elif button == 'Выход из настроек':
@@ -115,10 +137,20 @@ def press(button):
         app.showSubWindow('Настройки подключения к БД')
     elif button == "Зактрыть график":
         app.hideSubWindow("График")
-    elif button == "Закрыть график Pie":
-        app.hideSubWindow("График Pie")
 
 
+def push(btn):
+    global subWindowName
+    global pieName
+    if type(subWindowName) is int:
+        if type(pieName) is int:
+            subWindowName = str(subWindowName)
+            pieName = str(pieName)
+            if btn == "Закрыть график Pie" + ' ' + pieName:
+                app.removePieChart("График Pie" + " " + pieName)
+                app.destroySubWindow("График Pie" + " " + subWindowName)
+                subWindowName = int(subWindowName)
+                pieName = int(pieName)
 # Основное окно
 app = gui('Project-X', 'Fullscreen')
 
@@ -187,15 +219,15 @@ app.addButtons(["Зактрыть график"], press)
 
 app.stopSubWindow()
 
-# Окно Графика тип Pie
-app.startSubWindow("График Pie", "График Pie")
-
-app.addPieChart("Pie", {table1Name: 50})
-# Кнопки
-app.addButtons(["Закрыть график Pie"], press)
-
-# Устанавливает размер окна
-app.stopSubWindow()
+# # Окно Графика тип Pie
+# app.startSubWindow("График Pie", "График Pie")
+#
+# app.addPieChart("Pie", {table1Name: 50})
+# # Кнопки
+# app.addButtons(["Закрыть график Pie"], press)
+#
+# # Устанавливает размер окна
+# app.stopSubWindow()
 app.exitFullscreen()
 
 app.go()
