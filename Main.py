@@ -2,6 +2,7 @@ from numpy import sin, pi, arange
 from appJar import gui
 import random
 from time import strftime, gmtime
+import postgresql
 import matplotlib.pyplot as plt
 
 table1Name = 'Таблица 1'
@@ -16,47 +17,99 @@ def timeSt():
 
 # Функция загрузки имён полей
 def downlColumNames():
-    pass
-    app.changeOptionBox('Таблица 1', newOptions, callFunction=False)
-    app.changeOptionBox('Таблица 2', newOptions, callFunction=False)
+    a1 = str(app.getOptionBox("Таблица 1"))
+    b2 = str(app.getOptionBox("Таблица 2"))
+    a1 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + a1 + '\''
+    b2 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + b2 + '\''
+    conDb = postgresql.open(db)
+    colum1List = conDb.prepare(a1)
+    colum2List = conDb.prepare(b2)
+    mes = ''
+    # app.getOptionBox("Поле таблицы 1")
+    # app.getOptionBox("Поле таблицы 2")
+    # app.getOptionBox("Тип графика")
+    for i in colum1List:
+        mes += str(i)
+        mes1 = mes.replace("(", '')
+        mes2 = mes1.replace(')', '')
+        mes3 = mes2.replace("'", "")
+        # count = mes3.count(",")
+        mes4 = mes3[:-1]
+        mes5 = mes4.split(',')
+    app.changeOptionBox('Поле таблицы 1', mes5, callFunction=False)
+    nes = ''
+    for i in colum2List:
+        nes += str(i)
+        nes1 = nes.replace("(", '')
+        nes2 = nes1.replace(')', '')
+        nes3 = nes2.replace("'", "")
+        # count = mes3.count(",")
+        nes4 = nes3[:-1]
+        nes5 = nes4.split(',')
+    app.changeOptionBox('Поле таблицы 2', nes5, callFunction=False)
     # Забираем имена полей из БД , парсим и вставляем их в changeOptionBox выбора полей для JOIN
 
 
 # Функция загрузки списка таблиц
 def downlTablesNames():
-    pass
-    conDb
-    app.changeOptionBox("Поле таблицы 1", newOptions, callFunction=False)
-    app.changeOptionBox("Поле таблицы 2", newOptions, callFunction=False)
+    conDb = postgresql.open(db)
+    tableList = conDb.prepare("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'")
+    mes = ''
+    for i in tableList:
+        mes += str(i)
+        mes1 = mes.replace("(", '')
+        mes2 = mes1.replace(')', '')
+        mes3 = mes2.replace("'", "")
+        # count = mes3.count(",")
+        mes4 = mes3[:-1]
+        mes5 = mes4.split(',')
+    app.changeOptionBox("Таблица 1", mes5, callFunction=False)
+    app.changeOptionBox("Таблица 2", mes5, callFunction=False)
     # Забираем имена доступных таблиц из БД, парсим и вставляем их в changeOptionBox выбора
 
 
 # Функция соединения с БД
 def connectToDb():
-    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-    global conDb
-    try:
-        conDb = ''
-        pass
-    except:
-        # Здесь к каждой ошибке создаём свое окно infoBox
-        pass
-    else:
-        app.infoBox('Результат', 'Покдключение к БД установлено')
+    global db
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     downlTablesNames()
-    downlColumNames()
+    # try:
+    #     conDb = postgresql.open(db)
+
+    # except:
+        # Здесь к каждой ошибке создаём свое окно infoBox
+
+    # else:
+        # app.infoBox('Результат', 'Покдключение к БД установлено')
+        # downlTablesNames()
+    # downlColumNames()
 
 
 # Функция вывода данных из БД в графики
 def showGrafInfo():
+    conDb = postgresql.open(db)
+    a1 ='select' + ' ' + str(app.getOptionBox("Поле таблицы 1")) + ' ' + 'from' + ' ' + str(app.getOptionBox("Таблица 1"))
+    table1Info = conDb.prepare(a1)
+    mes = ''
+    for i in table1Info:
+        mes = mes + str(i)
+        mes1 = mes.replace("(", '')
+        mes2 = mes1.replace(')', '')
+        mes3 = mes2.replace("'", "")
+        mes4 = mes3.replace("Decimal", '')
+        # count = mes3.count(",")
+        mes5 = mes4[:-1]
+        mes6 = mes5.split(',')
+        l = []
+        for n in mes6:
+            mes7 = int(n)
+            l.append(mes7)
+            print(l)
     # Берёт инфу из JOIN выбранных колонн, парсит вставляет в параметры графика, создаёт график
 
-    app.getOptionBox("Таблица 1")
-    app.getOptionBox("Таблица 2")
-    app.getOptionBox("Поле таблицы 1")
-    app.getOptionBox("Поле таблицы 2")
-    app.getOptionBox("Тип графика")
+
 
 #Здесь будут браться значения из таблиц для вывода в графики
 def getXY():
@@ -94,6 +147,8 @@ def press(button):
     if button == 'Подключиться к БД':
         connectToDb()
         app.hideSubWindow('Настройки подключения к БД')
+    elif button == "Выбрать таблицы":
+        downlColumNames()
     elif button == 'Очистить поля':
         app.clearEntry("Пользователь")
         app.clearEntry("Пароль")
@@ -161,7 +216,7 @@ app.addLabelOptionBox("Тип JOIN", ["FULL", "LEFT", "RIGHT", "INNER"])
 app.addLabelOptionBox("Тип графика", ["Pie", "График"])
 
 # Кнопки
-app.addButtons(['Выход', 'Создать График'], press)
+app.addButtons(['Выход', 'Создать График','Выбрать таблицы'], press)
 app.addToolbarButton("SETTINGS", press, findIcon=True)
 
 # Statusbar с локальным временем
@@ -195,7 +250,7 @@ app.setFocus('Пользователь')
 
 # Устанавливает размер окна
 app.setSize("Fullscreen")
-
+app.exitFullscreen()
 app.stopSubWindow()
 
 # Окно показа графика
