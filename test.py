@@ -1,4 +1,3 @@
-a = ['6','9']
-for i in a:
-
+a = [6,9,5,6]
+b = sum(a)
 print(b)
