@@ -81,20 +81,22 @@ def downlTablesNames():
 # Функция соединения с БД
 def connectToDb():
     global db
-    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+
     db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     downlTablesNames()
+    app.hideSubWindow('Настройки подключения к БД')
     # try:
-    #     conDb = postgresql.open(db)
-
+    #     db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #         'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    #     downlTablesNames()
     # except:
-    # Здесь к каждой ошибке создаём свое окно infoBox
-
+    #     postgresql.exceptions.ConnectionRejectionError
+    # # Здесь к каждой ошибке создаём свое окно infoBox
+    #     app.infoBox('Результат', 'Неверные данные подключения')
+    #
     # else:
-    # app.infoBox('Результат', 'Покдключение к БД установлено')
-    # downlTablesNames()
-    # downlColumNames()
+    #     app.infoBox('Результат', 'Покдключение к БД установлено')
+    #     app.hideSubWindow('Настройки подключения к БД')
 
 
 # Функция вывода данных из БД в графики
@@ -140,11 +142,6 @@ def showGrafInfo():
         return sum(l), sum(li)
 
 
-def generate():
-    app.updatePlot("p1", *showGrafInfo())
-    showLabels()
-
-
 def showLabels():
     axes.legend([app.getOptionBox("Таблица 1") + " " + app.getOptionBox("Таблица 2")])
     axes.set_xlabel(str(app.getOptionBox("Поле таблицы 1")))
@@ -152,41 +149,63 @@ def showLabels():
     app.refreshPlot("p1")
 
 
+def subWindPie():
+    global subWindowName
+    global pieName
+    a, b = showGrafInfo()
+    subWindowName += 1
+    pieName += 1
+    subWindowName = str(subWindowName)
+    pieName = str(pieName)
+    # Окно Графика тип Pie
+    app.startSubWindow("График Pie" + " " + "№" + subWindowName, "График Pie" + " " + "№" + subWindowName)
+    app.addPieChart("График Pie" + " " + "№" + pieName, {table1Name: a, table2Name: b})
+    # Кнопки
+    app.addButtons(["Закрыть график Pie" + " " + "№" + pieName], push)
+    app.stopSubWindow()
+    app.showSubWindow("График Pie" + " " + "№" + subWindowName)
+    pieName = int(pieName)
+    subWindowName = int(subWindowName)
+
+
+def subWindGrafik():
+    app.updatePlot("p1", *showGrafInfo())
+    showLabels()
+    app.showSubWindow("График")
+
+
+def clear():
+    app.clearEntry("Имя пользователя")
+    app.clearEntry("Пароль")
+    app.setFocus('Имя пользователя')
+
+
 def press(button):
     global table1Name
     global table2Name
-    global subWindowName
-    global pieName
     if button == 'Подключиться к БД':
         connectToDb()
-        app.hideSubWindow('Настройки подключения к БД')
     elif button == "Выбрать таблицы":
-        downlColumNames()
+        try:
+            downlColumNames()
+        except:
+            NameError
+            app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Очистить поля':
-        app.clearEntry("Пользователь")
-        app.clearEntry("Пароль")
-        app.setFocus('Пользователь')
+        clear()
     elif button == 'Создать График':
         if str(app.getOptionBox("Тип графика")) == "График":
-            showGrafInfo()
-            app.updatePlot("p1", *showGrafInfo())
-            showLabels()
-            app.showSubWindow("График")
+            try:
+                subWindGrafik()
+            except:
+                NameError
+                app.infoBox('Результат', 'Сначала подключитесь к БД')
         if str(app.getOptionBox("Тип графика")) == "Pie":
-            a, b = showGrafInfo()
-            subWindowName += 1
-            pieName += 1
-            subWindowName = str(subWindowName)
-            pieName = str(pieName)
-            # Окно Графика тип Pie
-            app.startSubWindow("График Pie" + " " + "№" + subWindowName, "График Pie" + " " + "№" + subWindowName)
-            app.addPieChart("График Pie" + " " + "№" + pieName, {table1Name: a, table2Name: b})
-            # Кнопки
-            app.addButtons(["Закрыть график Pie" + " " + "№" + pieName], push)
-            app.stopSubWindow()
-            app.showSubWindow("График Pie" + " " + "№" + subWindowName)
-            pieName = int(pieName)
-            subWindowName = int(subWindowName)
+            try:
+                subWindPie()
+            except:
+                NameError
+                app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Выход':
         app.stop()
     elif button == 'Выход из настроек':
@@ -214,7 +233,7 @@ def push(btn):
 # Основное окно
 app = gui('Project-X', 'Fullscreen')
 # Временное окно входа в программу
-app.showSplash("VisualDB", fill='blue', stripe='black', fg='white', font=44)
+# app.showSplash("VisualDB", fill='blue', stripe='black', fg='white', font=44)
 # Выпадающее меню графиков
 app.addLabelOptionBox("Таблица 1", ["A", "Б"])
 app.addLabelOptionBox("Таблица 2", ["Б", "S"])
@@ -235,19 +254,19 @@ app.startSubWindow('Настройки подключения к БД', 'Нас�
 # Кнопки
 app.addButtons(['Выход из настроек', 'Подключиться к БД', 'Очистить поля', ], press)
 # Названия строк
-app.addLabelEntry('Пользователь')
+app.addLabelEntry('Имя пользователя')
 app.addLabelSecretEntry('Пароль')
 app.addLabelEntry('IP')
 app.addLabelEntry('Port')
 app.addLabelEntry('Название БД')
 # Подписывает действие внутри строки
-app.setEntryDefault('Пользователь', 'Введите имя пользователя')
+app.setEntryDefault('Имя пользователя', 'Введите имя пользователя')
 app.setEntryDefault('Пароль', 'Введите пароль')
 app.setEntryDefault('IP', 'Введите IP')
 app.setEntryDefault('Port', 'Введите PORT')
 app.setEntryDefault('Название БД', 'Введите название БД')
 # Устанавливает курсор на строке ввода
-app.setFocus('Пользователь')
+app.setFocus('Имя пользователя')
 # Устанавливает размер окна
 app.setSize("Fullscreen")
 app.exitFullscreen()
@@ -256,12 +275,10 @@ app.stopSubWindow()
 app.startSubWindow("График", "График")
 axes = app.addPlot('p1', [1, 2], [3, 4])
 showLabels()
-# app.addButton("Generate", generate)
 # Кнопки
 app.addButtons(["Зактрыть график"], press)
-# Устанавливает размер окна
 app.stopSubWindow()
-# app.stopSubWindow()
+# Устанавливает размер окна
 app.exitFullscreen()
 app.go()
 # Пример окна со скроллингом
