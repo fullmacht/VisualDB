@@ -1,9 +1,6 @@
-from numpy import sin, pi, arange
 from appJar import gui
-import random
 from datetime import tzinfo, timedelta, datetime, timezone
 import postgresql
-import matplotlib.pyplot as plt
 
 table1Name = 'Таблица 1'
 table2Name = 'Таблица 2'
@@ -75,7 +72,6 @@ def downlTablesNames():
         mes5 = mes4.split(',')
     app.changeOptionBox("Таблица 1", mes5, callFunction=False)
     app.changeOptionBox("Таблица 2", mes5, callFunction=False)
-    # Забираем имена доступных таблиц из БД, парсим и вставляем их в changeOptionBox выбора
 
 
 # Функция соединения с БД
