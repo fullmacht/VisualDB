@@ -6,7 +6,7 @@ table1Name = 'Таблица 1'
 table2Name = 'Таблица 2'
 pieName = 0
 subWindowName = 0
-mess = ''
+mess = ['a','b']
 
 
 class UTC025(tzinfo):
@@ -62,9 +62,9 @@ def downlColumNames():
     с3 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + с3 + '\''
     d4 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + d4 + '\''
     connectToDb
-    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
-    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     colum1List = conDb.prepare(a1)
     colum2List = conDb.prepare(b2)
@@ -78,7 +78,7 @@ def downlColumNames():
         des3 = des2.replace("'", "")
         des4 = des3[:-1]
         des5 = des4.split(',')
-        app.changeOptionBox("Столбец для ввода", des5, callFunction=False)
+        app.changeOptionBox("Столбец для ввода", sorted(des5), callFunction=False)
     mes = ''
     for i in colum1List:
         mes += str(i)
@@ -87,7 +87,7 @@ def downlColumNames():
         mes3 = mes2.replace("'", "")
         mes4 = mes3[:-1]
         mes5 = mes4.split(',')
-        app.changeOptionBox('Поле таблицы 1', mes5, callFunction=False)
+        app.changeOptionBox('Поле таблицы 1', sorted(mes5), callFunction=False)
     les = ''
     for i in colum3List:
         les += str(i)
@@ -96,7 +96,7 @@ def downlColumNames():
         les3 = les2.replace("'", "")
         les4 = les3[:-1]
         les5 = les4.split(',')
-        app.changeOptionBox('Столбец', les5, callFunction=False)
+        app.changeOptionBox('Столбец', sorted(les5), callFunction=False)
     nes = ''
     for i in colum2List:
         nes += str(i)
@@ -105,29 +105,31 @@ def downlColumNames():
         nes3 = nes2.replace("'", "")
         nes4 = nes3[:-1]
         nes5 = nes4.split(',')
-        app.changeOptionBox('Поле таблицы 2', nes5, callFunction=False)
+        app.changeOptionBox('Поле таблицы 2', sorted(nes5), callFunction=False)
 
 
 # Функция загрузки списка таблиц
 def downlTablesNames():
     connectToDb
-    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
-    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     tableList = conDb.prepare("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'")
     mes = ''
     for i in tableList:
-        mes += str(i)
-        mes1 = mes.replace("(", '')
-        mes2 = mes1.replace(')', '')
-        mes3 = mes2.replace("'", "")
-        mes4 = mes3[:-1]
-        mes5 = mes4.split(',')
-        app.changeOptionBox("Таблица 1", mes5, callFunction=False)
-        app.changeOptionBox("Таблица 2", mes5, callFunction=False)
-        app.changeOptionBox("Таблица", mes5, callFunction=False)
-        app.changeOptionBox("Таблица для ввода", mes5, callFunction=False)
+        if type(i) is not type(None):
+            mes += str(i)
+            mes1 = mes.replace("(", '')
+            mes2 = mes1.replace(')', '')
+            mes3 = mes2.replace("'", "")
+            mes4 = mes3[:-1]
+            mes5 = mes4.split(',')
+            mes6 = sorted(mes5)
+            app.changeOptionBox("Таблица 1", mes6, callFunction=False)
+            app.changeOptionBox("Таблица 2", mes6, callFunction=False)
+            app.changeOptionBox("Таблица", mes6, callFunction=False)
+            app.changeOptionBox("Таблица для ввода", mes6, callFunction=False)
 
 
 # Функция вывода данных из БД в графики
@@ -135,9 +137,9 @@ def showGrafInfo():
     global l
     global li
     connectToDb
-    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
-    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     a1 = 'select' + ' ' + str(app.getOptionBox("Поле таблицы 1")) + ' ' + 'from' + ' ' + str(
         app.getOptionBox("Таблица 1"))
@@ -176,9 +178,13 @@ def showGrafInfo():
                 li.append(nes7)
                 print('li', li)
     if str(app.getOptionBox("Тип графика")) == "График":
-        return l, li
+        if len(l) == len(li):
+            return l, li
+        else:
+            app.infoBox('Ошибка', 'Размерности')
     elif str(app.getOptionBox("Тип графика")) == "Pie":
         return sum(l), sum(li)
+
 
 
 def showLabels():
@@ -221,9 +227,9 @@ def clear():
 
 def selectTableInfo():
     connectToDb
-    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
-    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     a1 = str(app.getOptionBox("Таблица"))
     b2 = str(app.getOptionBox("Столбец"))
@@ -242,17 +248,18 @@ def selectTableInfo():
 
 
 def insertInfo():
-    connectToDb
-    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
-    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     d4 = str(app.getOptionBox("Таблица для ввода"))
     e5 = str(app.getOptionBox("Столбец для ввода"))
     f6 = str(app.getEntry('Данные'))
     a1 = 'INSERT INTO' + ' ' + d4 + '(' + e5 + ')' + ' ' + 'VALUES' + ' ' + '(' + f6 + ')'
     # try:
-    conDb.prepare(a1)
+    conDb.execute(a1)
+
+    print(a1)
 
 
 def press(button):
@@ -262,11 +269,11 @@ def press(button):
         connectToDb()
         app.hideSubWindow('Настройки подключения к БД')
     elif button == "Показать таблицы":
-        try:
+        # try:
             downlTablesNames()
-        except:
-            NameError
-            app.infoBox('Результат', 'Сначала подключитесь к БД')
+        # except:
+        #     NameError
+        #     app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == "Показать столбцы":
         try:
             downlColumNames()
@@ -377,7 +384,7 @@ app.startSubWindow('Настройки подключения к БД', 'Нас�
                    transient=True,
                    grouped=True)
 # Кнопки
-app.addButtons(['Выход из настроек', 'Подключиться к БД', 'Очистить поля', ], press)
+app.addButtons(['Подключиться к БД', 'Очистить поля', 'Выход из настроек', ], press)
 # Названия строк
 app.addLabelEntry('Имя пользователя')
 app.addLabelSecretEntry('Пароль')
@@ -410,7 +417,7 @@ app.setFont(20)
 app.addLabelOptionBox("Таблица", mess)
 app.addLabelOptionBox("Столбец", mess)
 app.addTextArea(title='Показать данные', text=mess)
-app.addButtons(['Очистить окно', "Закрыть",], press)
+app.addButtons(['Очистить окно', "Закрыть"], press)
 app.exitFullscreen()
 app.stopSubWindow()
 # окно ввода данных
