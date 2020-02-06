@@ -32,17 +32,15 @@ def timeSt():
 
 # Функция соединения с БД
 def connectToDb():
+    pass
     # global db
-    global conDb
-    global db
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # global conDb
+    # global db
+    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # conDb = postgresql.open(db)
-    # downlTablesNames()
-    app.hideSubWindow('Настройки подключения к БД')
     # try:
-    #     db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #         'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-    #     downlTablesNames()
     # except:
     #     postgresql.exceptions.ConnectionRejectionError
     # # Здесь к каждой ошибке создаём свое окно infoBox
@@ -64,7 +62,9 @@ def downlColumNames():
     с3 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + с3 + '\''
     d4 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + d4 + '\''
     connectToDb
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     colum1List = conDb.prepare(a1)
     colum2List = conDb.prepare(b2)
@@ -111,7 +111,9 @@ def downlColumNames():
 # Функция загрузки списка таблиц
 def downlTablesNames():
     connectToDb
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     tableList = conDb.prepare("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'")
     mes = ''
@@ -133,7 +135,9 @@ def showGrafInfo():
     global l
     global li
     connectToDb
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     a1 = 'select' + ' ' + str(app.getOptionBox("Поле таблицы 1")) + ' ' + 'from' + ' ' + str(
         app.getOptionBox("Таблица 1"))
@@ -148,10 +152,11 @@ def showGrafInfo():
         mes5 = mes4[:-1]
         mes6 = mes5.split(',')
         l = []
-        for n in mes6:
-            mes7 = int(n)
-            l.append(mes7)
-            print('l',l)
+        for p in mes6:
+            if p != 'None':
+                mes7 = int(p)
+                l.append(mes7)
+                print('l', l)
     b2 = 'select' + ' ' + str(app.getOptionBox("Поле таблицы 2")) + ' ' + 'from' + ' ' + str(
         app.getOptionBox("Таблица 2"))
     table2Info = conDb.prepare(b2)
@@ -166,9 +171,10 @@ def showGrafInfo():
         nes6 = nes5.split(',')
         li = []
         for n in nes6:
-            nes7 = int(n)
-            li.append(nes7)
-            print ('li',li)
+            if n != 'None':
+                nes7 = int(n)
+                li.append(nes7)
+                print('li', li)
     if str(app.getOptionBox("Тип графика")) == "График":
         return l, li
     elif str(app.getOptionBox("Тип графика")) == "Pie":
@@ -215,7 +221,9 @@ def clear():
 
 def selectTableInfo():
     connectToDb
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     a1 = str(app.getOptionBox("Таблица"))
     b2 = str(app.getOptionBox("Столбец"))
@@ -235,7 +243,9 @@ def selectTableInfo():
 
 def insertInfo():
     connectToDb
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+        'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
     d4 = str(app.getOptionBox("Таблица для ввода"))
     e5 = str(app.getOptionBox("Столбец для ввода"))
@@ -245,39 +255,39 @@ def insertInfo():
     conDb.prepare(a1)
 
 
-
 def press(button):
     global table1Name
     global table2Name
     if button == 'Подключиться к БД':
         connectToDb()
+        app.hideSubWindow('Настройки подключения к БД')
     elif button == "Показать таблицы":
-        # try:
+        try:
             downlTablesNames()
-        # except:
-        #     NameError
-        #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+        except:
+            NameError
+            app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == "Показать столбцы":
-        # try:
+        try:
             downlColumNames()
-        # except:
-        #     NameError
-            # app.infoBox('Результат', 'Сначала подключитесь к БД')
+        except:
+            NameError
+            app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Очистить поля':
         clear()
     elif button == 'Создать График':
         if str(app.getOptionBox("Тип графика")) == "График":
-            # try:
+            try:
                 subWindGrafik()
-            # except:
-            #     NameError
-            #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+            except:
+                NameError
+                app.infoBox('Результат', 'Сначала подключитесь к БД')
         if str(app.getOptionBox("Тип графика")) == "Pie":
-            # try:
+            try:
                 subWindPie()
-            # except:
-            #     NameError
-            #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+            except:
+                NameError
+                app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Выход':
         app.stop()
     elif button == 'Выход из настроек':
@@ -287,17 +297,17 @@ def press(button):
     elif button == 'Показать данные':
         app.showSubWindow(button)
     elif button == 'Показать таблицу':
-        # try:
+        try:
             downlTablesNames()
-        # except:
-        #     NameError
-        #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+        except:
+            NameError
+            app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Показать столбец':
-        # try:
+        try:
             downlColumNames()
-        # except:
-        #     NameError
-        #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+        except:
+            NameError
+            app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'показать данные':
         selectTableInfo()
     elif button == "Зактрыть график":
@@ -305,19 +315,19 @@ def press(button):
     elif button == 'Окно ввода данных':
         app.showSubWindow(button)
     elif button == 'показать таблицу':
-        # try:
+        try:
             downlTablesNames()
-        # except:
-        #     NameError
-        #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+        except:
+            NameError
+            app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'показать столбец':
         downlColumNames()
     elif button == "показать столбцы":
-        # try:
+        try:
             downlColumNames()
-        # except:
-    #     NameError
-    #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+        except:
+            NameError
+            app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Ввести данные':
         insertInfo()
     elif button == 'Закрыть':
@@ -325,7 +335,8 @@ def press(button):
         app.hideSubWindow('Показать данные')
     elif button == 'Очистить окно':
         app.clearTextArea('Показать данные')
-
+    elif button == 'Зактрыть окно':
+        app.hideSubWindow('Окно ввода данных')
 
 
 def push(btn):
@@ -343,9 +354,9 @@ def push(btn):
 
 
 # Основное окно
-app = gui('VisualDB','Fullscreen')
+app = gui('VisualDB', 'Fullscreen')
 # Временное окно входа в программу
-# app.showSplash("VisualDB", fill='blue', stripe='black', fg='white', font=44)
+app.showSplash("VisualDB", fill='blue', stripe='black', fg='white', font=44)
 # Выпадающее меню графиков
 app.addLabelOptionBox("Таблица 1", ["A", "Б"])
 app.addLabelOptionBox("Таблица 2", ["Б", "S"])
@@ -354,7 +365,9 @@ app.addLabelOptionBox("Поле таблицы 2", ["2", " 3"])
 # app.addLabelOptionBox("Тип JOIN", ["FULL", "LEFT", "RIGHT", "INNER"])
 app.addLabelOptionBox("Тип графика", ["Pie", "График"])
 # Кнопки
-app.addButtons(['Выход', 'Создать График', 'Показать столбцы', 'Показать таблицы', 'Показать данные', 'Окно ввода данных'], press)
+app.addButtons(
+    ['Показать таблицы', 'Показать столбцы', 'Создать График', 'Показать данные', 'Окно ввода данных', 'Выход', ],
+    press)
 app.addToolbarButton("SETTINGS", press, findIcon=True)
 # Statusbar с локальным временем
 app.addStatusbar()
@@ -397,7 +410,7 @@ app.setFont(20)
 app.addLabelOptionBox("Таблица", mess)
 app.addLabelOptionBox("Столбец", mess)
 app.addTextArea(title='Показать данные', text=mess)
-app.addButtons(["Закрыть", 'Очистить окно'], press)
+app.addButtons(['Очистить окно', "Закрыть",], press)
 app.exitFullscreen()
 app.stopSubWindow()
 # окно ввода данных
@@ -405,7 +418,7 @@ app.startSubWindow('Окно ввода данных', 'Окно ввода да
 app.addLabelEntry('Данные')
 app.setEntryDefault('Данные', 'Введите данные')
 app.setFocus('Данные')
-app.addButtons(['Ввести данные', 'показать таблицу', 'показать столбец'], press)
+app.addButtons(['Ввести данные', 'показать таблицу', 'показать столбец', 'Зактрыть окно'], press)
 app.addLabelOptionBox("Таблица для ввода", mess)
 app.addLabelOptionBox("Столбец для ввода", mess)
 app.exitFullscreen()
