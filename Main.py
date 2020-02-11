@@ -35,7 +35,7 @@ def connectToDb():
     # global db
     # global conDb
     # global db
-    # db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    # db = 'pq://' + "postgres" + ':' + "12344" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # conDb = postgresql.open(db)
     # try:
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
@@ -62,7 +62,7 @@ def downlColumNames():
     b3 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + b3 + '\''
     с3 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + с3 + '\''
     d4 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + d4 + '\''
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -121,7 +121,7 @@ def downlColumNames():
 # Функция загрузки списка таблиц
 def downlTablesNames():
     connectToDb
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -146,7 +146,7 @@ def downlTablesNames():
 # Функция вывода данных из БД в графики
 def xAxe():
     global l
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -178,7 +178,7 @@ def xAxe():
     #     return sum(l), sum(li)
 def label1():
     global li
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -210,7 +210,7 @@ def label1():
 
 def label2():
     global la
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -276,7 +276,7 @@ def subWindGrafik():
     x = xAxe()
     y = label1()
     z = label2()
-    ax.plot(x,y,label=app.getOptionBox("Поле таблицы Оси X"))
+    ax.plot(x,y,label=app.getOptionBox("Поле таблицы 2"))
     ax.plot(x,z,label=app.getOptionBox("Поле таблицы 3"))
     ax.set_xlabel(app.getOptionBox("Поле таблицы Оси X"))
     ax.set_ylabel(app.getOptionBox("Поле таблицы 2"))
@@ -294,7 +294,7 @@ def clear():
 
 
 def selectTableInfo():
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -315,7 +315,7 @@ def selectTableInfo():
 
 
 def insertInfo():
-    db = 'pq://' + "postgres" + ':' + "123" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
+    db = 'pq://' + "postgres" + ':' + "1234" + '@' + "localhost" + ':' + "5432" + '/' + "postgres"
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
