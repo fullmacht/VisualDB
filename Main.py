@@ -466,12 +466,13 @@ def updateMeter():
 
 
 # Основное окно
-app = gui('VisualDB', 'Fullscreen')
+app = gui('VisualDB', 'Fullscreen',useTtk=True)
+app.setTtkTheme("elegance")
 # Временное окно входа в программу
 # app.showSplash('VisualDB', fill='blue', stripe='black', fg='white', font=44)
-# app.addMeter('Загрузка')
-# app.setMeterFill('Загрузка', 'green')
-# app.registerEvent(updateMeter)
+app.addMeter('Загрузка')
+app.setMeterFill('Загрузка', 'green')
+app.registerEvent(updateMeter)
 # Выпадающее меню графиков
 
 
@@ -482,6 +483,15 @@ app.addLabelOptionBox('Тип графика', ['Pie', 'График'])
 app.addButtons(
     ['Выбрать таблицу оси X', 'Выбрать таблицу 2','Выбрать таблицу 3', 'Создать График', 'Показать данные', 'Окно ввода данных', 'Выход', ],
     press)
+app.setButtonTooltip('Выбрать таблицу оси X',"Выберите таблицу из БД для создания графика")
+app.setButtonTooltip('Выбрать таблицу 2',"Выберите таблицу из БД для создания графика")
+app.setButtonTooltip('Выбрать таблицу 3',"Выберите таблицу из БД для создания графика")
+app.setButtonTooltip('Создать График',"Создайте график в отдельном окне")
+app.setButtonTooltip('Показать данные',"Посмотрите данные из таблицы в этом окне")
+app.setButtonTooltip('Окно ввода данных',"Дополните таблицу информацией")
+app.setButtonTooltip('Выход',"Выйти из программы")
+app.setOptionBoxTooltip('Тип графика',"Нажмите, чтобы выбрать подходящий график. Для графика 'Pie' выберите таблицы 2 и 3. Они будут использоваться для построения графика 'Pie'")
+
 app.addToolbarButton('SETTINGS', press, findIcon=True)
 # Statusbar с локальным временем
 app.addStatusbar()
@@ -496,10 +506,11 @@ app.addButtons(['Подключиться к БД', 'Очистить поля',
 app.addLabelEntry('Имя пользователя')
 app.addLabelSecretEntry('Пароль')
 app.addLabelEntry('IP')
-app.setLabelTooltip('IP',"asdasd")
+app.setLabelTooltip('IP',"Введите здесь IP Базы Данных")
 app.addLabelEntry('Port')
 app.addLabelEntry('Название БД')
 # Подписывает действие внутри строки
+app.setEntryTooltip('IP',"Введите здесь Ip Базы Данных")
 app.setEntryDefault('Имя пользователя', 'Введите имя пользователя')
 app.setEntryDefault('Пароль', 'Введите пароль')
 app.setEntryDefault('IP', 'Введите IP')
@@ -519,7 +530,7 @@ fig = app.addPlotFig('p1')
 ax = fig.subplots()
 # Кнопки
 app.addButtons(['Зактрыть график'], press)
-app.setButtonTooltip('Зактрыть график', 'asdfsdf')
+app.setButtonTooltip('Зактрыть график', 'Закрыть окно с графиком')
 app.stopSubWindow()
 # подокно Показать данные
 app.startSubWindow('Показать данные', 'Показать данные', modal=False, blocking=False, transient=True, )
