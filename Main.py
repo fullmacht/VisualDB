@@ -177,15 +177,9 @@ def xAxe():
             if p != 'None':
                 mes7 = int(p)
                 l.append(mes7)
-                # print('l', l)
-    # if str(app.getOptionBox('Тип графика')) == 'График':
-        # if len(l) == len(li):
-        #     return l
-        # else:
-        #     app.infoBox('Ошибка', 'Размерности')
     return l
-    # elif str(app.getOptionBox('Тип графика')) == 'Pie':
-    #     return sum(l), sum(li)
+
+
 def label1():
     global li
     db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
@@ -209,14 +203,8 @@ def label1():
             if n != 'None':
                 nes7 = int(n)
                 li.append(nes7)
-                # print('li', li)
-    # if str(app.getOptionBox('Тип графика')) == 'График':
-    #     if len(l) == len(li):
     return li
-        # else:
-            # app.infoBox('Ошибка', 'Размерности')
-    # elif str(app.getOptionBox('Тип графика')) == 'Pie':
-    #     return sum(l), sum(li)
+
 
 def label2():
     global la
@@ -241,14 +229,7 @@ def label2():
             if n != 'None':
                 nes7 = int(n)
                 la.append(nes7)
-                # print('li', li)
-    # if str(app.getOptionBox('Тип графика')) == 'График':
-    #     if len(l) == len(li):
     return la
-    # else:
-    # app.infoBox('Ошибка', 'Размерности')
-    # elif str(app.getOptionBox('Тип графика')) == 'Pie':
-    #     return sum(l), sum(li)
 
 
 def subWindPie():
@@ -279,15 +260,17 @@ def subWindGrafik():
     x = xAxe()
     y = label1()
     z = label2()
-    ax.plot(x,y,label=app.getOptionBox('Поле таблицы 2'))
-    ax.plot(x,z,label=app.getOptionBox('Поле таблицы 3'))
-    ax.set_xlabel(app.getOptionBox('Поле таблицы оси X'))
-    ax.set_ylabel('Ось Y')
-    ax.legend()
-    plt.show()
-    # app.updatePlot('p1', *showGrafInfo())
-    # showLabels()
-    app.showSubWindow('График')
+    if str(app.getOptionBox('Тип графика')) == 'График':
+        if len(y) == len(x) == len(z):
+            ax.plot(x, y, label=app.getOptionBox('Поле таблицы 2'))
+            ax.plot(x, z, label=app.getOptionBox('Поле таблицы 3'))
+            ax.set_xlabel(app.getOptionBox('Поле таблицы оси X'))
+            ax.set_ylabel('Ось Y')
+            ax.legend()
+            plt.show()
+            app.showSubWindow('График')
+        else:
+            app.infoBox('Ошибка', 'Ошибка размерности')
 
 
 def clear():
@@ -329,15 +312,10 @@ def insertInfo():
     e5 = str(app.getOptionBox('Столбец для ввода'))
     f6 = str(app.getEntry('Данные'))
     a1 = 'INSERT INTO' + ' ' + d4 + '(' + e5 + ')' + ' ' + 'VALUES' + ' ' + '(' + f6 + ')'
-    # try:
     conDb.execute(a1)
-
-    print(a1)
 
 
 def press(button):
-    # global table1Name
-    # global table2Name
     if button == 'Подключиться к БД':
         connectToDb()
         app.hideSubWindow('Настройки подключения к БД')
@@ -462,7 +440,6 @@ def percentComplete():
 
 def updateMeter():
     app.setMeter('Загрузка', percentComplete())
-# schedule function to be called regularly
 
 
 # Основное окно
@@ -473,11 +450,7 @@ app.setTtkTheme("elegance")
 app.addMeter('Загрузка')
 app.setMeterFill('Загрузка', 'green')
 app.registerEvent(updateMeter)
-# Выпадающее меню графиков
-
-
-
-# app.addLabelOptionBox('Тип JOIN', ['FULL', 'LEFT', 'RIGHT', 'INNER'])
+# Выпадающее меню выбора графиков
 app.addLabelOptionBox('Тип графика', ['Pie', 'График'])
 # Кнопки
 app.addButtons(
@@ -490,8 +463,8 @@ app.setButtonTooltip('Создать График',"Создайте графи�
 app.setButtonTooltip('Показать данные',"Посмотрите данные из таблицы в этом окне")
 app.setButtonTooltip('Окно ввода данных',"Дополните таблицу информацией")
 app.setButtonTooltip('Выход',"Выйти из программы")
-app.setOptionBoxTooltip('Тип графика',"Нажмите, чтобы выбрать подходящий график. Для графика 'Pie' выберите таблицы 2 и 3. Они будут использоваться для построения графика 'Pie'")
-
+app.setOptionBoxTooltip('Тип графика',
+                        "Нажмите, чтобы выбрать подходящий график. Для графика 'Pie' выберите таблицы 2 и 3. Они будут использоваться для построения графика 'Pie'")
 app.addToolbarButton('SETTINGS', press, findIcon=True)
 # Statusbar с локальным временем
 app.addStatusbar()
@@ -524,8 +497,6 @@ app.setSize('Fullscreen')
 app.stopSubWindow()
 # Окно показа графика
 app.startSubWindow('График', 'График')
-# axes = app.addPlot('p1', [1, 2], [3, 4])
-# showLabels()
 fig = app.addPlotFig('p1')
 ax = fig.subplots()
 # Кнопки
@@ -574,12 +545,12 @@ app.startSubWindow('Поле таблицы оси X')
 app.addLabelOptionBox('Поле таблицы оси X', ['Выберите столбец 3'])
 app.addButtons(['выбрать поле таблицы оси X'], press)
 app.stopSubWindow()
-
+# Подокно выбора таблицы 2
 app.startSubWindow('Поле таблицы 2')
 app.addLabelOptionBox('Поле таблицы 2', ['Выберите столбец 2'])
 app.addButtons(['выбрать поле таблицы 2'], press)
 app.stopSubWindow()
-
+# Подокно выбора таблицы 3
 app.startSubWindow('Поле таблицы 3')
 app.addLabelOptionBox('Поле таблицы 3', ['Выберите столбец 3'])
 app.addButtons(['выбрать поле таблицы 3'], press)
