@@ -35,7 +35,7 @@ def connectToDb():
     # global db
     # global conDb
     # global db
-    # db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    # db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # conDb = postgresql.open(db)
     # try:
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
@@ -62,7 +62,7 @@ def downlColumNames(button):
     b3 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + b3 + '\''
     с3 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + с3 + '\''
     d4 = 'SELECT' + ' ' + 'column_name FROM postgres.information_schema.columns where table_name=' + '\'' + d4 + '\''
-    db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -126,7 +126,7 @@ def downlColumNames(button):
 # Функция загрузки списка таблиц
 def downlTablesNames(button):
     connectToDb
-    db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -156,7 +156,7 @@ def downlTablesNames(button):
 # Функция вывода данных из БД в графики
 def xAxe():
     global l
-    db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -182,7 +182,7 @@ def xAxe():
 
 def label1():
     global li
-    db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -208,7 +208,7 @@ def label1():
 
 def label2():
     global la
-    db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -283,7 +283,7 @@ def clear():
 
 
 def selectTableInfo():
-    db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
@@ -304,7 +304,7 @@ def selectTableInfo():
 
 
 def insertInfo():
-    db = 'pq://' + 'postgres' + ':' + '123' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
     conDb = postgresql.open(db)
