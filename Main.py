@@ -151,6 +151,7 @@ def downlTablesNames(button):
         app.changeOptionBox('Таблица', mes6, callFunction=False)
     elif button == 'показать таблицу':
         app.changeOptionBox('Таблица для ввода', mes6, callFunction=False)
+    print(mes6)
 
 
 # Функция вывода данных из БД в графики
@@ -328,11 +329,11 @@ def press(button):
         #     app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Выбрать таблицу 2':
         app.showSubWindow('Таблица 2')
-        try:
-            downlTablesNames(button)
-        except:
-            NameError
-            app.infoBox('Результат', 'Сначала подключитесь к БД')
+        # try:
+        downlTablesNames(button)
+        # except:
+        #     NameError
+        #     app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Выбрать таблицу 3':
         app.showSubWindow('Таблица 3')
         # try:
