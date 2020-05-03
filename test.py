@@ -1,6 +1,9 @@
 from appJar import gui
 import postgresql
-
+import matplotlib.pyplot as plt
+from numpy import sin, pi, arange
+from appJar import gui
+import random
 
 
 def connect_to_db():
@@ -130,41 +133,139 @@ def download_column_names_info():
 #     a1 = 'download_column_names_infoect' + ' ' + str(app.getOptionBox('Поле таблицы оси X')) + ' ' + 'from' + ' ' + str(
 #         app.getOptionBox('Таблица Оси X'))
 #     table1Info = con_db.prepare(a1)
-
-
-def subWindGrafik():
+# def showLabels():
+#     ax.legend()
+#     ax.set_xlabel('Поле таблицы оси X')
+#     ax.set_ylabel('Ось Y')
+#     app.refreshPlot('p1')
+def subWindGrafik(btn):
+    global l
+    # if str(app.getOptionBox('Тип графика')) == 'График':
+    # if btn == 'download_column_names_info':
     info = download_column_names_info()
-    for
-    x = xAxe()
-    y = label1()
-    z = label2()
-    if str(app.getOptionBox('Тип графика')) == 'График':
-        if len(y) == len(x) == len(z):
-            ax.plot(x, y, label=app.getOptionBox('Поле таблицы 2'))
-            ax.plot(x, z, label=app.getOptionBox('Поле таблицы 3'))
-            ax.set_xlabel(app.getOptionBox('Поле таблицы оси X'))
-            ax.set_ylabel('Ось Y')
-            ax.legend()
-            plt.show()
-            app.showSubWindow('График')
-        else:
-            app.infoBox('Ошибка', 'Ошибка размерности')
+    x = [1,2,3,4,5,6,7]
+
+    l = []
+        # i=0
+        # for n in l:
+        #     if n != n[i+1] or n == n:
+
+
+    for name,value in info.items():
+        a = plt.plot(x, value,label=name)
+        # a = ax.plot(x, value, label=name)
+        plt.xlabel('x_value')
+        plt.title('Histogram of IQ')
+        plt.grid(True)
+        plt.legend()
+        l.append(a)
+
+
+    # elif btn == 'close':
+    #     l = []
+
+        # fig, ax = plt.subplots()
+        # a = ax.plot(x, value)
+        #
+        # ax.set(xlabel='time (s)', ylabel='voltage (mV)',
+        #        title='About as simple as it gets, folks')
+        # ax.grid()
+
+        # fig.savefig("test.png")
+        # print(type(a))
+    # return
+
+
+    # list_of_values = info.values()
+    # i = 0
+    # print(list_of_values)
+    # i += 1
+    # app.refreshPlot('p1')
+    # ax.plot(x, value)
+    # app.updatePlot('p1',)
+    # showLabels()
+    # ax.plot(x, value, label=name)
+    # ax.set_xlabel(app.getOptionBox('Поле таблицы оси X'))
+    # ax.set_ylabel('Ось Y')
+    # app.refreshPlot('p1')
+    # app.getN
+    # ax.legend()
+    # plt.show()
+    # ax.plot(x, value, label=name)
+    # ax.set_xlabel('Поле таблицы оси X')
+    # ax.set_ylabel('Ось Y')
+
+    # plt.show()
+    # app.showSubWindow('grafik')
+    # i += 1
+    # print(i)
+    # for k in list_of_values:
+    # if len(list_of_values[0] == len(list_of_values[i])):
+    # print(k)
+    # print(name)
+    # i += 1
+    # ax.plot(x, k, label=name)
+    # ax.set_xlabel('Поле таблицы оси X')
+    # ax.set_ylabel('Ось Y')
+    # ax.legend()
+    # plt.show()
+    # app.showSubWindow('grafik')
+    # else:
+    #     app.infoBox('Ошибка', 'Ошибка размерности')
+
+def getXY():
+    x = arange(0.0, 3.0, 0.01)
+    y = sin(random.randint(1,10) * pi * x)
+    return x,y
 
 
 def push(btn):
+    global l
     if btn == 'download_column_names_list':
         app.showSubWindow('choice')
         download_column_names_list(btn)
     elif btn == 'download_column_names_info':
-        print(download_column_names_info())
+        subWindGrafik(btn)# subWindGrafik()
+        # ax.legend()
+
+        # app.refreshPlot('p1')
+        # plt.show()
+        plt.savefig("test.png")
+        app.reloadImage("grafik", "test.png")
+        app.showSubWindow('grafik')
+
+        # plt.show()
+        # plt.savefig("test.png")
+        # plt.show(subWindGrafik())
+
+    elif btn == 'close':
+        # app.updatePlot('p1',[0],[0])
+        # app.refreshPlot('p1')
+        # app.emptyPlot('p1')
+        # app.removePlot('p1')
+        # app.removeCanvas('p1')
+        # app.emptyCurrentContainer()
+        # subWindGrafik(btn)
+        # app.emptyCurrentContainer()
+        plt.cla()
+        plt.clf()
+        plt.close()
+        app.hideSubWindow('grafik')
+        # del l
 
 
 app = gui('Программа')
-
 app.addButton('download_column_names_list', push)
 
+app.startSubWindow('grafik')
+# fig = app.addPlotFig('p1')
+# ax = fig.subplots()
+app.addImage("grafik", "test.png")
+app.addButton('close',push)
+app.stopSubWindow()
 
 app.startSubWindow('choice', 'choice')
+
 app.addTickOptionBox('column_names', ['Данные не загрузились'])
 app.addButton('download_column_names_info', push)
 app.stopSubWindow()

@@ -45,13 +45,99 @@
 #
 # result = np.dot(a, b)
 # print(result.shape)
+#
+#
+# thisdict = {
+#   "brand": [1,2,3,4],
+#   "model": [1,2,3,4],
+# }
+# i = 0
+# a = list(thisdict.values())
+# for k in a:
+#     # print('values',k)
+#     if len(a[0]) == len(a[i]):
+#         i = i+1
+#         print(k)
+#         print(len(k),len(k))
+# #         print()
+#
+# from numpy import sin, pi, arange
+# from appJar import gui
+# import random
+#
+# def getXY():
+#     x = arange(0.0, 3.0, 0.01)
+#     y = sin(random.randint(1,10) * pi * x)
+#     return x,y
+#
+# def generate(btn):
+#     # *getXY() will unpack the two return values
+#     # and pass them as separate parameters
+#     app.updatePlot("p1", *getXY())
+#     showLabels()
+#
+# def showLabels():
+#     axes.legend(['The curve'])
+#     axes.set_xlabel("X Axes")
+#     axes.set_ylabel("Y Axes")
+#     app.refreshPlot("p1")
+#
+# app = gui()
+# axes = app.addPlot("p1", *getXY())
+# showLabels()
+# app.addButton("Generate", generate)
+# app.go()
+import matplotlib.pyplot as plt
+# fig, ax = plt.subplots()
+# fig, ax = plt.subplots(nrows=1, ncols=2,sharex=True,sharey=True)
+# fig, axes = plt.subplots(subplot_kw=dict(polar=True))
+# fig, axes = plt.subplots(3, 3, subplot_kw=dict(polar=True))
+# axes[0, 0].plot(x, y)
+# axes[1, 1].plot(x, z)
+# axes[2, 2].plot(x, r)
+# fig = plt.figure()
+# fig.add_subplot()
+# for ax in ax:
+# ax.plot(x, y, 'b')
+#     ax.set_xlabel('x')
+#     ax.set_ylabel('y')
+#     ax.set_title('Заголовок')
+# fig.tight_layout()
+# plt.tight_layout()
+# plt.show()
+# ax.plot(t, s)
+#
+# ax.set(xlabel='time (s)', ylabel='voltage (mV)',
+#        title='About as simple as it gets, folks')
+# ax.grid()
+#C:\Users\pc\PycharmProjects\Project-X\test.png
+# fig.savefig("test.png")
+# plt.show()
+# def a():
+#     x = [0,1,2,3]
+#     y = [5,6,7,8]
+#     r = [8,9,10,11]
+#     z = [12,13,14,15]
+#     d = {
+#         1:x,
+#         2:y,
+#         3:r,
+#     }
+#     l = []
+#     for k, v in d.items():
+#         a = plt.plot(x,v)
+#         plt.xlabel(k)
+#         l.append(a)
+#     # b=plt.plot(x, [88,99,99,00])
+#
+#     return
+# a()
+# plt.show()
+from appJar import gui
 
 
-thisdict = {
-  "brand": "Ford",
-  "model": "Mustang",
-  "year": 1964
-}
-thisdict["color"] = "red"
-thisdict["car"] = "blue"
-print(thisdict)
+app = gui()
+app.startLabelFrame("Simple", 0, 0)
+app.addImage("simple", "test.png")
+app.stopLabelFrame()
+app.go()
