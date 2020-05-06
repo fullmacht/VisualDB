@@ -1,4 +1,8 @@
+import matplotlib.pyplot as plt
+
+
 # a = [10,20,30,40]
+
 # for i in a:
 #     i+=i
 #     print(i)
@@ -87,7 +91,7 @@
 # showLabels()
 # app.addButton("Generate", generate)
 # app.go()
-import matplotlib.pyplot as plt
+
 # fig, ax = plt.subplots()
 # fig, ax = plt.subplots(nrows=1, ncols=2,sharex=True,sharey=True)
 # fig, axes = plt.subplots(subplot_kw=dict(polar=True))
@@ -110,9 +114,7 @@ import matplotlib.pyplot as plt
 # ax.set(xlabel='time (s)', ylabel='voltage (mV)',
 #        title='About as simple as it gets, folks')
 # ax.grid()
-#C:\Users\pc\PycharmProjects\Project-X\test.png
-# fig.savefig("test.png")
-# plt.show()
+#C:\Users\pc\PycharmProjects\Project-X\# plt.show()
 # def a():
 #     x = [0,1,2,3]
 #     y = [5,6,7,8]
@@ -138,38 +140,53 @@ import matplotlib.pyplot as plt
 #
 # app = gui()
 # app.startLabelFrame("Simple", 0, 0)
-# app.addImage("simple", "test.png")
-# app.stopLabelFrame()
+# app.addImage("simple", "app.stopLabelFrame()
 # app.go()
 
 
 # class NotNumberException(Exception):
+#
+# import smtplib
+#
+# # And imghdr to find the types of our images
+# import imghdr
+#
+# # Here are the email package modules we'll need
+# from email.message import EmailMessage
+#
+# # Create the container email message.
+# msg = EmailMessage()
+# msg['Subject'] = 'Our family reunion'
+# # me == the sender's email address
+# # family = the list of all recipients' email addresses
+# msg['From'] = me
+# msg['To'] = ', '.join(family)
+# msg.preamble = 'You will not see this in a MIME-aware mail reader.\n'
+#
+# # Open the files in binary mode.  Use imghdr to figure out the
+# # MIME subtype for each specific image.
+# for file in pngfiles:
+#     with open(file, 'rb') as fp:
+#         img_data = fp.read()
+#     msg.add_attachment(img_data, maintype='image',
+#                                  subtype=imghdr.what(None, img_data))
+#
+# # Send the email via our own SMTP server.
+# with smtplib.SMTP('localhost') as s:
+#     s.send_message(msg)
 
-import smtplib
 
-# And imghdr to find the types of our images
-import imghdr
+# plt.pie()
+# plt.show()
 
-# Here are the email package modules we'll need
-from email.message import EmailMessage
+# Pie chart, where the slices will be ordered and plotted counter-clockwise:
+labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
+sizes = [10, 30, 45, 10]
+explode = (0.1, 0.2, 0.3, 0.4)  # only "explode" the 2nd slice (i.e. 'Hogs')
 
-# Create the container email message.
-msg = EmailMessage()
-msg['Subject'] = 'Our family reunion'
-# me == the sender's email address
-# family = the list of all recipients' email addresses
-msg['From'] = me
-msg['To'] = ', '.join(family)
-msg.preamble = 'You will not see this in a MIME-aware mail reader.\n'
+plt.subplots()
+plt.pie(sizes, explode=None, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=90)
+plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-# Open the files in binary mode.  Use imghdr to figure out the
-# MIME subtype for each specific image.
-for file in pngfiles:
-    with open(file, 'rb') as fp:
-        img_data = fp.read()
-    msg.add_attachment(img_data, maintype='image',
-                                 subtype=imghdr.what(None, img_data))
-
-# Send the email via our own SMTP server.
-with smtplib.SMTP('localhost') as s:
-    s.send_message(msg)
+plt.show()

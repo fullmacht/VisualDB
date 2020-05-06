@@ -1,3 +1,5 @@
+import socket
+
 import postgresql
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -52,13 +54,13 @@ def download_column_names_list(btn):
             column_names_list.append(i[-1])
         else:
             column_names_list.append(i)
-    if btn == 'download_column_names_list':
-        app.changeOptionBox('column_names', column_names_list)
+    if btn == 'Выбрать данные для графика':
+        app.changeOptionBox('Список колон', column_names_list)
 
 
 def download_column_names_info():
     con_db = connect_to_db()
-    column_names = app.getOptionBox('column_names')
+    column_names = app.getOptionBox('Список колон')
     true_column_list = []
     for key,value in column_names.items():
         if value == True:
@@ -92,7 +94,28 @@ def download_column_names_info():
     return info_for_graf
 
 
-def subWindGrafik():
+def pie_plot():
+    info = download_column_names_info()
+    value_list = []
+    name_list = []
+    for name, value in info.items():
+        # a = plt.plot(x, value, label=name)
+        value = sum(value)
+        value_list.append(value)
+        name_list.append(name)
+    plt.subplots()
+    plt.pie(value_list, explode=None, labels=name_list, autopct='%1.1f%%',
+                shadow=True, startangle=90)
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.title(app.getOptionBox('Тип графика'))
+    plt.legend()
+    plt.savefig(app.getOptionBox('Тип графика') + '.png')
+    im = Image.open(app.getOptionBox('Тип графика') + '.png')
+    im.save(app.getOptionBox('Тип графика') + '.ppm')
+    app.reloadImage("grafik", app.getOptionBox('Тип графика') + '.ppm')
+
+
+def plot():
     info = download_column_names_info()
     x = [1,2,3,4,5,6,7]
     l = []
@@ -103,11 +126,11 @@ def subWindGrafik():
         plt.grid(True)
         plt.legend()
         l.append(a)
-    plt.savefig("График.png")
-    im = Image.open("График.png")
-    im.save("График.ppm")
-    app.reloadImage("grafik", "График.ppm")
-    app.showSubWindow('grafik')
+    plt.savefig(app.getOptionBox('Тип графика') + '.png')
+    im = Image.open(app.getOptionBox('Тип графика') + '.png')
+    im.save(app.getOptionBox('Тип графика') + '.ppm')
+    app.reloadImage("grafik", app.getOptionBox('Тип графика') + '.ppm')
+
 
 def send(f_name):
     msg = EmailMessage()
@@ -115,12 +138,11 @@ def send(f_name):
     msg['From'] = app.getEntry('От кого')
     msg['To'] = app.getEntry('Кому')
     msg.get_filename()
-        # odxgxareylbxxatc
     try:
+        msg.set_content(app.getTextArea('сообщение'))
         with open(f_name, 'rb') as fp:
             img_data = fp.read()
             msg.add_attachment(img_data, maintype='image', subtype=imghdr.what(None, img_data),filename=f_name)
-            # Сдесь надо добавить выбор хоста почты
             server_address = app.getEntry('От кого')
             server_address = server_address.split('@')[1]
         with smtplib.SMTP(host='smtp.{}'.format(server_address), port=587) as s:
@@ -128,51 +150,79 @@ def send(f_name):
             s.login(user=app.getEntry('От кого'), password=app.getEntry('Пароль от почты'))
             s.send_message(msg)
     except smtplib.SMTPAuthenticationError:
-        app.infoBox('Ошибка!', 'Пароль не подходит!')
+        app.infoBox('Ошибка!', 'Пароль не подходит! Возможно Вам необходимо создать пароль для этого приложения на Вашей электронной почте.')
+    except socket.gaierror:
+        app.infoBox('Ошибка!', 'Неправильно написана почта отправителя или программа не поддерживает отправку с Вашей почты!')
+    except FileNotFoundError:
+        app.infoBox('Ошибка!', 'Не найден файл графика!')
+    except IndexError:
+        app.infoBox('Ошибка!', 'Вы не ввели данные отправителя!')
+
+
+def clear_plot():
+    plt.cla()
+    plt.clf()
+    plt.close()
+
+def clear_message_window():
+    app.clearTextArea('сообщение')
+    app.clearEntry('Тема письма')
+    app.clearEntry('От кого')
+    app.clearEntry('Кому')
+    app.clearEntry('Пароль от почты')
 
 def push(btn):
-    if btn == 'download_column_names_list':
+    if btn == 'Выбрать данные для графика':
         app.showSubWindow('choice')
         download_column_names_list(btn)
-    elif btn == 'download_column_names_info':
-        try:
-            subWindGrafik()
-        except ValueError:
-            app.infoBox('Ошибка!', 'Размерность данных не совпадает!')
+    elif btn == 'Построить график':
+        if app.getOptionBox('Тип графика') == "Plot":
+            try:
+                plot()
+                app.showSubWindow('grafik')
+            except ValueError:
+                app.infoBox('Ошибка!', 'Размерность данных для графика не совпадает!')
+        elif app.getOptionBox('Тип графика') == 'Pie':
+            pie_plot()
+            app.showSubWindow('grafik')
     elif btn == 'close':
-        plt.cla()
-        plt.clf()
-        plt.close()
+        clear_plot()
         app.hideSubWindow('grafik')
+    elif btn == 'close window send':
+        clear_message_window()
+        app.hideSubWindow('Send')
     elif btn == 'send':
         app.showSubWindow('Send')
     elif btn == 'uploud':
         send(f_name= app.getOptionBox('Тип графика') + '.png')
-    # elif btn == 'uploud_pie':
-    #     send(f_name=app.getOptionBox('Тип графика') + '.png')
 
 
-app = gui('Программа')
-app.addButton('download_column_names_list', push)
-app.addLabelOptionBox('Тип графика', ['Pie', 'График'])
+app = gui('Программа', )
+app.addButton('Выбрать данные для графика', push)
+app.addLabelOptionBox('Тип графика', ['Plot','Pie', ])
 
 app.startSubWindow('grafik')
+# app.setSize('Fullscreen')
 app.addImage("grafik", "test.ppm")
 app.addButtons(['close','send'],push)
 app.stopSubWindow()
 
 app.startSubWindow('choice', 'choice')
-
-app.addTickOptionBox('column_names', ['Данные не загрузились'])
-app.addButton('download_column_names_info', push)
+# app.setSize('Fullscreen')
+app.addTickOptionBox('Список колон', ['Данные не загрузились'])
+app.addButton('Построить график', push)
 app.stopSubWindow()
 
 app.startSubWindow('Send')
+# app.setSize('Fullscreen')
+app.addLabel('l1', 'Отправка на Gmail, Yandex и Mail почты')
 app.addLabelEntry('Тема письма')
 app.addLabelEntry('От кого')
 app.addLabelEntry('Кому')
 app.addLabelEntry('Пароль от почты')
-app.addButton('uploud',push)
+app.addLabel('l2', 'Текст сообщения')
+app.addTextArea('сообщение')
+app.addButtons(['uploud','close window send'],push)
 app.stopSubWindow()
 
 app.go()
