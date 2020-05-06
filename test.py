@@ -40,13 +40,14 @@ def download_column_names_list(btn):
         column_list = con_db.prepare(column_list)
         bes = ''
         for i in column_list:
-            bes += str(i)
-            bes1 = bes.replace('(', '')
-            bes2 = bes1.replace(')', '')
-            bes3 = bes2.replace('\'', '')
-            bes4 = bes3[:-1]
-            bes5 = '{} | {}'.format(bes4,table_name)
-            list_for_optionbox.append(bes5)
+            if type(i) is not type(None):
+                bes += str(i)
+                bes1 = bes.replace('(', '')
+                bes2 = bes1.replace(')', '')
+                bes3 = bes2.replace('\'', '')
+                bes4 = bes3[:-1]
+                bes5 = '{} | {}'.format(bes4,table_name)
+                list_for_optionbox.append(bes5)
     column_names_list = []
     for i in list_for_optionbox:
         if i.count(',') > 0:
