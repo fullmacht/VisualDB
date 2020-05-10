@@ -1,5 +1,4 @@
 import socket
-
 import postgresql
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -7,9 +6,43 @@ import imghdr
 from email.message import EmailMessage
 from appJar import gui
 import smtplib
+from datetime import tzinfo, timedelta, datetime, timezone
 
 
+class UTC025(tzinfo):
+    def __init__(self, offset=10800, name=None):
+        self.offset = timedelta(seconds=offset)
+        self.name = name or self.__class__.__name__
+
+    def utcoffset(self, dt):
+        return self.offset
+
+    def tzname(self, dt):
+        return self.name
+
+    def dst(self, dt):
+        return timedelta(0)
+
+
+# Функция получения времени для Statusbar'a
+def timeSt():
+    t = datetime.now(UTC025()).strftime('%a, %d %b %Y %H:%M:%S')
+    app.setStatusbar(t)
+
+
+# def connect_to_db():
 def connect_to_db():
+    # try:
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #         'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    # except:
+    #     postgresql.exceptions.ConnectionRejectionError
+    # # Здесь к каждой ошибке создаём свое окно infoBox
+    #     app.infoBox('Результат', 'Неверные данные подключения')
+    #
+    # else:
+    #     app.infoBox('Результат', 'Покдключение к БД установлено')
+    #     app.hideSubWindow('Настройки подключения к БД')
     db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
     con_db = postgresql.open(db)
     return con_db
@@ -31,7 +64,7 @@ def download_table_names_list():
     return table_names_list
 
 
-def download_column_names_list(btn):
+def download_column_names_list():
     con_db = connect_to_db()
     table_names_list = download_table_names_list()
     list_for_optionbox = []
@@ -55,13 +88,17 @@ def download_column_names_list(btn):
             column_names_list.append(i[-1])
         else:
             column_names_list.append(i)
-    if btn == 'Выбрать данные для графика':
-        app.changeOptionBox('Список колон', column_names_list)
+    # if btn == 'Выбрать данные для графика X':
+    app.changeOptionBox('Список колон X', column_names_list)
+    # elif btn == 'Выбрать данные для графика Y':
+    app.changeOptionBox('Список колон Y', column_names_list)
+    # elif btn == 'Выбрать данные для графика Z':
+    app.changeOptionBox('Список колон Z', column_names_list)
 
 
-def download_column_names_info():
+def download_column_names_info(option_box):
     con_db = connect_to_db()
-    column_names = app.getOptionBox('Список колон')
+    column_names = app.getOptionBox(option_box)
     true_column_list = []
     for key,value in column_names.items():
         if value == True:
@@ -78,6 +115,8 @@ def download_column_names_info():
         info = con_db.prepare(sql_code)
         nes = ''
         for i in info:
+            # Добавить счётчик количества строк в колонне
+            # добавить чтобы None заменялся на 0
             nes = nes + str(i)
             nes1 = nes.replace('(', '')
             nes2 = nes1.replace(')', '')
@@ -88,6 +127,7 @@ def download_column_names_info():
             numbers = []
             for n in nes6:
                 if n != 'None':
+                    #добавить чтобы None заменялся на 0
                    nes7 = int(n)
                    numbers.append(nes7)
         graf_name =  '{} | {}'.format(list_name,table_name)
@@ -95,12 +135,11 @@ def download_column_names_info():
     return info_for_graf
 
 
-def pie_plot():
-    info = download_column_names_info()
+def pie_plot(option_box_x):
+    info = download_column_names_info(option_box=option_box_x)
     value_list = []
     name_list = []
     for name, value in info.items():
-        # a = plt.plot(x, value, label=name)
         value = sum(value)
         value_list.append(value)
         name_list.append(name)
@@ -116,17 +155,19 @@ def pie_plot():
     app.reloadImage("grafik", app.getOptionBox('Тип графика') + '.ppm')
 
 
-def plot():
-    info = download_column_names_info()
-    x = [1,2,3,4,5,6,7]
+def plot(option_box_x, option_box_y):
+    info_x = download_column_names_info(option_box=option_box_x)
+    info_y= download_column_names_info(option_box=option_box_y)
+    # x = [1,2,3,4,5,6,7]
     l = []
-    for name,value in info.items():
-        a = plt.plot(x, value,label=name)
-        plt.xlabel('x_value')
-        plt.title('Histogram of IQ')
-        plt.grid(True)
-        plt.legend()
-        l.append(a)
+    for name_x,value_x in info_x.items():
+        for name_y,value_y in info_y.items():
+            a = plt.plot(value_x, value_y,label=name_y)
+            plt.xlabel(name_x)
+            plt.title('Histogram of IQ')
+            plt.grid(True)
+            plt.legend()
+            l.append(a)
     plt.savefig(app.getOptionBox('Тип графика') + '.png')
     im = Image.open(app.getOptionBox('Тип графика') + '.png')
     im.save(app.getOptionBox('Тип графика') + '.ppm')
@@ -172,19 +213,46 @@ def clear_message_window():
     app.clearEntry('Кому')
     app.clearEntry('Пароль от почты')
 
+def insertInfo():
+    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+    conDb = postgresql.open(db)
+    d4 = str(app.getOptionBox('Таблица для ввода'))
+    e5 = str(app.getOptionBox('Столбец для ввода'))
+    f6 = str(app.getEntry('Данные'))
+    a1 = 'INSERT INTO' + ' ' + d4 + '(' + e5 + ')' + ' ' + 'VALUES' + ' ' + '(' + f6 + ')'
+    conDb.execute(a1)
+
+
+def clear_DB_settings_window():
+    app.clearEntry('Имя пользователя')
+    app.clearEntry('Пароль')
+    app.clearEntry('IP')
+    app.clearEntry('Port')
+    app.clearEntry('Название БД')
+    app.setFocus('Имя пользователя')
+
+
 def push(btn):
-    if btn == 'Выбрать данные для графика':
+    if btn == 'Выбрать данные для графика X':
+        app.showSubWindow('choice')
+        download_column_names_list(btn)
+    elif btn == 'Выбрать данные для графика Y':
+        app.showSubWindow('choice')
+        download_column_names_list(btn)
+    elif btn == 'Выбрать данные для графика Z':
         app.showSubWindow('choice')
         download_column_names_list(btn)
     elif btn == 'Построить график':
         if app.getOptionBox('Тип графика') == "Plot":
             try:
-                plot()
+                plot(option_box_x='Список колон X',option_box_y='Список колон Y')
                 app.showSubWindow('grafik')
             except ValueError:
                 app.infoBox('Ошибка!', 'Размерность данных для графика не совпадает!')
         elif app.getOptionBox('Тип графика') == 'Pie':
-            pie_plot()
+            pie_plot(option_box_x='Список колон X')
             app.showSubWindow('grafik')
     elif btn == 'close':
         clear_plot()
@@ -197,10 +265,36 @@ def push(btn):
     elif btn == 'uploud':
         send(f_name= app.getOptionBox('Тип графика') + '.png')
 
+left = 25
+def percentComplete():
+    global left
+    left += 25
+    return left
 
-app = gui('Программа', )
-app.addButton('Выбрать данные для графика', push)
-app.addLabelOptionBox('Тип графика', ['Plot','Pie', ])
+
+def updateMeter():
+    app.setMeter('Загрузка', percentComplete())
+
+# app = gui('Программа', )
+# Основное окно
+app = gui('VisualDB',useTtk=True)
+app.setTtkTheme("elegance")
+
+# Временное окно входа в программу
+# app.showSplash('VisualDB', fill='blue', stripe='black', fg='white', font=44)
+app.addMeter('Загрузка')
+app.setMeterFill('Загрузка', 'green')
+app.registerEvent(updateMeter)
+
+app.addTickOptionBox('Список колон X', ['Данные не загрузились'])
+app.addTickOptionBox('Список колон Y', ['Данные не загрузились'])
+app.addTickOptionBox('Список колон Z', ['Данные не загрузились'])
+
+download_column_names_list()
+
+app.addButton('Построить график', push)
+# app.addButton('Выбрать данные для графика', push)
+app.addLabelOptionBox('Тип графика', ['Plot','Pie','3D' ])
 
 app.startSubWindow('grafik')
 # app.setSize('Fullscreen')
@@ -208,11 +302,11 @@ app.addImage("grafik", "test.ppm")
 app.addButtons(['close','send'],push)
 app.stopSubWindow()
 
-app.startSubWindow('choice', 'choice')
-# app.setSize('Fullscreen')
-app.addTickOptionBox('Список колон', ['Данные не загрузились'])
-app.addButton('Построить график', push)
-app.stopSubWindow()
+# app.startSubWindow('choice', 'choice')
+# # app.setSize('Fullscreen')
+# app.addTickOptionBox('Список колон', ['Данные не загрузились'])
+# app.addButton('Построить график', push)
+# app.stopSubWindow()
 
 app.startSubWindow('Send')
 # app.setSize('Fullscreen')

@@ -1,53 +1,53 @@
-from appJar import gui
-from datetime import tzinfo, timedelta, datetime, timezone
-import postgresql
-import matplotlib.pyplot as plt
-
-pieName = 0
-subWindowName = 0
-mess = ''
-
-
-class UTC025(tzinfo):
-    def __init__(self, offset=10800, name=None):
-        self.offset = timedelta(seconds=offset)
-        self.name = name or self.__class__.__name__
-
-    def utcoffset(self, dt):
-        return self.offset
-
-    def tzname(self, dt):
-        return self.name
-
-    def dst(self, dt):
-        return timedelta(0)
-
-
-# Функция получения времени для Statusbar'a
-def timeSt():
-    t = datetime.now(UTC025()).strftime('%a, %d %b %Y %H:%M:%S')
-    app.setStatusbar(t)
-
-
-# Функция соединения с БД
-def connectToDb():
-    pass
-    # global db
-    # global conDb
-    # global db
-    # db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
-    # conDb = postgresql.open(db)
-    # try:
-    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-    #         'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-    # except:
-    #     postgresql.exceptions.ConnectionRejectionError
-    # # Здесь к каждой ошибке создаём свое окно infoBox
-    #     app.infoBox('Результат', 'Неверные данные подключения')
-    #
-    # else:
-    #     app.infoBox('Результат', 'Покдключение к БД установлено')
-    #     app.hideSubWindow('Настройки подключения к БД')
+# from appJar import gui
+# from datetime import tzinfo, timedelta, datetime, timezone
+# import postgresql
+# import matplotlib.pyplot as plt
+#
+# pieName = 0
+# subWindowName = 0
+# mess = ''
+#
+#
+# class UTC025(tzinfo):
+#     def __init__(self, offset=10800, name=None):
+#         self.offset = timedelta(seconds=offset)
+#         self.name = name or self.__class__.__name__
+#
+#     def utcoffset(self, dt):
+#         return self.offset
+#
+#     def tzname(self, dt):
+#         return self.name
+#
+#     def dst(self, dt):
+#         return timedelta(0)
+#
+#
+# # Функция получения времени для Statusbar'a
+# def timeSt():
+#     t = datetime.now(UTC025()).strftime('%a, %d %b %Y %H:%M:%S')
+#     app.setStatusbar(t)
+#
+#
+# # Функция соединения с БД
+# def connectToDb():
+#     pass
+#     global db
+#     global conDb
+#     global db
+#     db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+#     conDb = postgresql.open(db)
+#     try:
+#     db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+#             'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+#     except:
+#         postgresql.exceptions.ConnectionRejectionError
+#     # Здесь к каждой ошибке создаём свое окно infoBox
+#         app.infoBox('Результат', 'Неверные данные подключения')
+#
+#     else:
+#         app.infoBox('Результат', 'Покдключение к БД установлено')
+#         app.hideSubWindow('Настройки подключения к БД')
 
 
 # Функция загрузки имён полей
@@ -181,106 +181,106 @@ def xAxe():
     return l
 
 
-def label1():
-    global li
-    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
-    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-    conDb = postgresql.open(db)
-    b2 = 'select' + ' ' + str(app.getOptionBox('Поле таблицы 2')) + ' ' + 'from' + ' ' + str(
-        app.getOptionBox('Таблица 2'))
-    table2Info = conDb.prepare(b2)
-    nes = ''
-    for i in table2Info:
-        nes = nes + str(i)
-        nes1 = nes.replace('(', '')
-        nes2 = nes1.replace(')', '')
-        nes3 = nes2.replace('\'', '')
-        nes4 = nes3.replace('Decimal', '')
-        nes5 = nes4[:-1]
-        nes6 = nes5.split(',')
-        li = []
-        for n in nes6:
-            if n != 'None':
-                nes7 = int(n)
-                li.append(nes7)
-    return li
+# def label1():
+#     global li
+#     db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+#     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+#     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+#     conDb = postgresql.open(db)
+#     b2 = 'select' + ' ' + str(app.getOptionBox('Поле таблицы 2')) + ' ' + 'from' + ' ' + str(
+#         app.getOptionBox('Таблица 2'))
+#     table2Info = conDb.prepare(b2)
+#     nes = ''
+#     for i in table2Info:
+#         nes = nes + str(i)
+#         nes1 = nes.replace('(', '')
+#         nes2 = nes1.replace(')', '')
+#         nes3 = nes2.replace('\'', '')
+#         nes4 = nes3.replace('Decimal', '')
+#         nes5 = nes4[:-1]
+#         nes6 = nes5.split(',')
+#         li = []
+#         for n in nes6:
+#             if n != 'None':
+#                 nes7 = int(n)
+#                 li.append(nes7)
+#     return li
 
 
-def label2():
-    global la
-    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
-    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-    conDb = postgresql.open(db)
-    b2 = 'select' + ' ' + str(app.getOptionBox('Поле таблицы 3')) + ' ' + 'from' + ' ' + str(
-        app.getOptionBox('Таблица 3'))
-    table2Info = conDb.prepare(b2)
-    nes = ''
-    for i in table2Info:
-        nes = nes + str(i)
-        nes1 = nes.replace('(', '')
-        nes2 = nes1.replace(')', '')
-        nes3 = nes2.replace('\'', '')
-        nes4 = nes3.replace('Decimal', '')
-        nes5 = nes4[:-1]
-        nes6 = nes5.split(',')
-        la = []
-        for n in nes6:
-            if n != 'None':
-                nes7 = int(n)
-                la.append(nes7)
-    return la
+# def label2():
+#     global la
+#     db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+#     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+#     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+#     conDb = postgresql.open(db)
+#     b2 = 'select' + ' ' + str(app.getOptionBox('Поле таблицы 3')) + ' ' + 'from' + ' ' + str(
+#         app.getOptionBox('Таблица 3'))
+#     table2Info = conDb.prepare(b2)
+#     nes = ''
+#     for i in table2Info:
+#         nes = nes + str(i)
+#         nes1 = nes.replace('(', '')
+#         nes2 = nes1.replace(')', '')
+#         nes3 = nes2.replace('\'', '')
+#         nes4 = nes3.replace('Decimal', '')
+#         nes5 = nes4[:-1]
+#         nes6 = nes5.split(',')
+#         la = []
+#         for n in nes6:
+#             if n != 'None':
+#                 nes7 = int(n)
+#                 la.append(nes7)
+#     return la
 
 
-def subWindPie():
-    # global table1Name
-    # global table2Name
-    global subWindowName
-    global pieName
-    table1Name = app.getOptionBox('Поле таблицы 2')
-    table2Name = app.getOptionBox('Поле таблицы 3')
-    print(table1Name,table2Name)
-    a, b = sum(label1()), sum(label2())
-    subWindowName += 1
-    pieName += 1
-    subWindowName = str(subWindowName)
-    pieName = str(pieName)
-    # Окно Графика тип Pie
-    app.startSubWindow('График Pie' + ' ' + '№' + subWindowName, 'График Pie' + ' ' + '№' + subWindowName)
-    app.addPieChart('График Pie' + ' ' + '№' + pieName, {table1Name: a,table2Name: b})
-    # Кнопки
-    app.addButtons(['Закрыть график Pie' + ' ' + '№' + pieName], push)
-    app.stopSubWindow()
-    app.showSubWindow('График Pie' + ' ' + '№' + subWindowName)
-    pieName = int(pieName)
-    subWindowName = int(subWindowName)
+# def subWindPie():
+#     # global table1Name
+#     # global table2Name
+#     global subWindowName
+#     global pieName
+#     table1Name = app.getOptionBox('Поле таблицы 2')
+#     table2Name = app.getOptionBox('Поле таблицы 3')
+#     print(table1Name,table2Name)
+#     a, b = sum(label1()), sum(label2())
+#     subWindowName += 1
+#     pieName += 1
+#     subWindowName = str(subWindowName)
+#     pieName = str(pieName)
+#     # Окно Графика тип Pie
+#     app.startSubWindow('График Pie' + ' ' + '№' + subWindowName, 'График Pie' + ' ' + '№' + subWindowName)
+#     app.addPieChart('График Pie' + ' ' + '№' + pieName, {table1Name: a,table2Name: b})
+#     # Кнопки
+#     app.addButtons(['Закрыть график Pie' + ' ' + '№' + pieName], push)
+#     app.stopSubWindow()
+#     app.showSubWindow('График Pie' + ' ' + '№' + subWindowName)
+#     pieName = int(pieName)
+#     subWindowName = int(subWindowName)
 
 
-def subWindGrafik():
-    x = xAxe()
-    y = label1()
-    z = label2()
-    if str(app.getOptionBox('Тип графика')) == 'График':
-        if len(y) == len(x) == len(z):
-            ax.plot(x, y, label=app.getOptionBox('Поле таблицы 2'))
-            ax.plot(x, z, label=app.getOptionBox('Поле таблицы 3'))
-            ax.set_xlabel(app.getOptionBox('Поле таблицы оси X'))
-            ax.set_ylabel('Ось Y')
-            ax.legend()
-            plt.show()
-            app.showSubWindow('График')
-        else:
-            app.infoBox('Ошибка', 'Ошибка размерности')
+# def subWindGrafik():
+#     x = xAxe()
+#     y = label1()
+#     z = label2()
+#     if str(app.getOptionBox('Тип графика')) == 'График':
+#         if len(y) == len(x) == len(z):
+#             ax.plot(x, y, label=app.getOptionBox('Поле таблицы 2'))
+#             ax.plot(x, z, label=app.getOptionBox('Поле таблицы 3'))
+#             ax.set_xlabel(app.getOptionBox('Поле таблицы оси X'))
+#             ax.set_ylabel('Ось Y')
+#             ax.legend()
+#             plt.show()
+#             app.showSubWindow('График')
+#         else:
+#             app.infoBox('Ошибка', 'Ошибка размерности')
 
-
-def clear():
-    app.clearEntry('Имя пользователя')
-    app.clearEntry('Пароль')
-    app.clearEntry('IP')
-    app.clearEntry('Port')
-    app.clearEntry('Название БД')
-    app.setFocus('Имя пользователя')
+#
+# def clear():
+#     app.clearEntry('Имя пользователя')
+#     app.clearEntry('Пароль')
+#     app.clearEntry('IP')
+#     app.clearEntry('Port')
+#     app.clearEntry('Название БД')
+#     app.setFocus('Имя пользователя')
 
 
 def selectTableInfo():
@@ -303,17 +303,17 @@ def selectTableInfo():
     mes6 = str(app.getOptionBox('Столбец')) + ':' + '\n' + '\n' + mes5
     app.setTextArea('Показать данные', mes6)
 
-
-def insertInfo():
-    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
-    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-    conDb = postgresql.open(db)
-    d4 = str(app.getOptionBox('Таблица для ввода'))
-    e5 = str(app.getOptionBox('Столбец для ввода'))
-    f6 = str(app.getEntry('Данные'))
-    a1 = 'INSERT INTO' + ' ' + d4 + '(' + e5 + ')' + ' ' + 'VALUES' + ' ' + '(' + f6 + ')'
-    conDb.execute(a1)
+#
+# def insertInfo():
+#     db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+#     # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+#     #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+#     conDb = postgresql.open(db)
+#     d4 = str(app.getOptionBox('Таблица для ввода'))
+#     e5 = str(app.getOptionBox('Столбец для ввода'))
+#     f6 = str(app.getEntry('Данные'))
+#     a1 = 'INSERT INTO' + ' ' + d4 + '(' + e5 + ')' + ' ' + 'VALUES' + ' ' + '(' + f6 + ')'
+#     conDb.execute(a1)
 
 
 def press(button):
@@ -366,19 +366,19 @@ def press(button):
         app.showSubWindow('Поле таблицы 3')
     elif button == 'Очистить поля':
         clear()
-    elif button == 'Создать График':
-        if str(app.getOptionBox('Тип графика')) == 'График':
-            # try:
-                subWindGrafik()
-            # except:
-            #     NameError
-            #     app.infoBox('Результат', 'Сначала подключитесь к БД')
-        if str(app.getOptionBox('Тип графика')) == 'Pie':
-            # try:
-                subWindPie()
-            # except:
-            #     NameError
-            #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+    # elif button == 'Создать График':
+    #     if str(app.getOptionBox('Тип графика')) == 'График':
+    #         # try:
+    #             subWindGrafik()
+    #         # except:
+    #         #     NameError
+    #         #     app.infoBox('Результат', 'Сначала подключитесь к БД')
+    #     if str(app.getOptionBox('Тип графика')) == 'Pie':
+    #         # try:
+    #             subWindPie()
+    #         # except:
+    #         #     NameError
+    #         #     app.infoBox('Результат', 'Сначала подключитесь к БД')
     elif button == 'Выход':
         app.stop()
     elif button == 'Выход из настроек':
@@ -420,39 +420,39 @@ def press(button):
         app.hideSubWindow('Окно ввода данных')
 
 
-def push(btn):
-    global subWindowName
-    global pieName
-    if type(subWindowName) is int:
-        if type(pieName) is int:
-            subWindowName = str(subWindowName)
-            pieName = str(pieName)
-            if btn == 'Закрыть график Pie' + ' ' + '№' + pieName:
-                app.removePieChart('График Pie' + ' ' + '№' + pieName)
-                app.destroySubWindow('График Pie' + ' ' + '№' + subWindowName)
-                subWindowName = int(subWindowName)
-                pieName = int(pieName)
-left = 25
-def percentComplete():
-    global left
-    left += 25
-    return left
-
-
-def updateMeter():
-    app.setMeter('Загрузка', percentComplete())
-
+# def push(btn):
+#     global subWindowName
+#     global pieName
+#     if type(subWindowName) is int:
+#         if type(pieName) is int:
+#             subWindowName = str(subWindowName)
+#             pieName = str(pieName)
+#             if btn == 'Закрыть график Pie' + ' ' + '№' + pieName:
+#                 app.removePieChart('График Pie' + ' ' + '№' + pieName)
+#                 app.destroySubWindow('График Pie' + ' ' + '№' + subWindowName)
+#                 subWindowName = int(subWindowName)
+#                 pieName = int(pieName)
+# left = 25
+# def percentComplete():
+#     global left
+#     left += 25
+#     return left
+#
+#
+# def updateMeter():
+#     app.setMeter('Загрузка', percentComplete())
+#
 
 # Основное окно
-app = gui('VisualDB', 'Fullscreen',useTtk=True)
-app.setTtkTheme("elegance")
+# app = gui('VisualDB', 'Fullscreen',useTtk=True)
+# app.setTtkTheme("elegance")
 # Временное окно входа в программу
 # app.showSplash('VisualDB', fill='blue', stripe='black', fg='white', font=44)
-app.addMeter('Загрузка')
-app.setMeterFill('Загрузка', 'green')
-app.registerEvent(updateMeter)
+# app.addMeter('Загрузка')
+# app.setMeterFill('Загрузка', 'green')
+# app.registerEvent(updateMeter)
 # Выпадающее меню выбора графиков
-app.addLabelOptionBox('Тип графика', ['Pie', 'График'])
+# app.addLabelOptionBox('Тип графика', ['Pie', 'График'])
 # Кнопки
 app.addButtons(
     ['Выбрать таблицу оси X', 'Выбрать таблицу 2','Выбрать таблицу 3', 'Создать График', 'Показать данные', 'Окно ввода данных', 'Выход', ],
