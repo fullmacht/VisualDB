@@ -109,18 +109,53 @@ def download_column_names_list(btn):
 def download_column_names_info(option_box):
     con_db = connect_to_db()
     column_names = app.getOptionBox(option_box)
-    true_column_list = []
-    for key,value in column_names.items():
-        if value == True:
-            true_column_list.append(key)
-    list_for_download = []
-    for i in true_column_list:
-        i = i.split(' | ')
-        list_for_download.append(i)
-    info_for_graf = {}
-    for name in list_for_download:
-        list_name = name[0]
-        table_name = name[1]
+    if type(column_names) == type(dict()):
+        true_column_list = []
+        for key,value in column_names.items():
+            if value == True:
+                true_column_list.append(key)
+        list_for_download = []
+        for i in true_column_list:
+            i = i.split(' | ')
+            list_for_download.append(i)
+        info_for_graf = {}
+        for name in list_for_download:
+            list_name = name[0]
+            table_name = name[1]
+            sql_code = 'select' + ' ' + list_name + ' ' + 'from' + ' ' + table_name
+            info = con_db.prepare(sql_code)
+            nes = ''
+            for i in info:
+                # Добавить счётчик количества строк в колонне
+                # добавить чтобы None заменялся на 0
+                nes = nes + str(i)
+                nes1 = nes.replace('(', '')
+                nes2 = nes1.replace(')', '')
+                nes3 = nes2.replace('\'', '')
+                nes4 = nes3.replace('Decimal', '')
+                nes5 = nes4[:-1]
+                nes6 = nes5.split(',')
+                numbers = []
+                for n in nes6:
+                    if n != 'None':
+                        # добавить чтобы None заменялся на 0
+                        nes7 = int(n)
+                        numbers.append(nes7)
+            graf_name = '{} | {}'.format(list_name, table_name)
+            info_for_graf[graf_name] = numbers
+        return info_for_graf
+    elif type(column_names) == type(str('example')):
+        list_for_download = []
+        # print(column_names)
+        column_names = column_names.split(' | ')
+        # for name in column_names:
+        #     list_for_download.append(name)
+        # list_for_download = list_for_download.split(' | ')
+        info_for_graf = {}
+        print(list_for_download)
+
+        list_name = column_names[0]
+        table_name = column_names[1]
         sql_code = 'select' + ' ' + list_name + ' ' + 'from' + ' ' + table_name
         info = con_db.prepare(sql_code)
         nes = ''
@@ -137,9 +172,9 @@ def download_column_names_info(option_box):
             numbers = []
             for n in nes6:
                 if n != 'None':
-                    #добавить чтобы None заменялся на 0
-                   nes7 = int(n)
-                   numbers.append(nes7)
+                        #добавить чтобы None заменялся на 0
+                    nes7 = int(n)
+                    numbers.append(nes7)
         graf_name =  '{} | {}'.format(list_name,table_name)
         info_for_graf[graf_name]=numbers
     return info_for_graf
@@ -247,7 +282,8 @@ def clear_DB_settings_window():
 def select_table_info(option_box_text_area):
     info = download_column_names_info(option_box=option_box_text_area)
     for name,value in info.items():
-        message = str(app.getOptionBox(option_box_text_area)) + ':' + '\n' + '\n' + value
+        message = str(app.getOptionBox(option_box_text_area)) + ':' + '\n' + '\n' + str(value) + '\n' + '\n'
+    # app.clearTextArea('Показать данные')
     app.setTextArea('Показать данные', message)
 
 
@@ -423,7 +459,7 @@ app.addButtons(['Вывод данных'], push)
 app.setFont(20)
 app.addLabelOptionBox('Список колонн', 'Данные не загрузились')
 # app.addLabelOptionBox('Столбец', mess)
-app.addTextArea(title='Показать данные', text='Здесь появятся данные')
+app.addTextArea(title='Показать данные', text='')
 app.addButtons(['Очистить окно', 'Закрыть'], push)
 #app.exitFullscreen()
 app.stopSubWindow()

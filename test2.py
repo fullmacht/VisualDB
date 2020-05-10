@@ -178,15 +178,18 @@ import matplotlib.pyplot as plt
 
 # plt.pie()
 # plt.show()
-
-# Pie chart, where the slices will be ordered and plotted counter-clockwise:
-labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
-sizes = [10, 30, 45, 10]
-explode = (0.1, 0.2, 0.3, 0.4)  # only "explode" the 2nd slice (i.e. 'Hogs')
-
-plt.subplots()
-plt.pie(sizes, explode=None, labels=labels, autopct='%1.1f%%',
-        shadow=True, startangle=90)
-plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-plt.show()
+#
+# # Pie chart, where the slices will be ordered and plotted counter-clockwise:
+# labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
+# sizes = [10, 30, 45, 10]
+# explode = (0.1, 0.2, 0.3, 0.4)  # only "explode" the 2nd slice (i.e. 'Hogs')
+#
+# plt.subplots()
+# plt.pie(sizes, explode=None, labels=labels, autopct='%1.1f%%',
+#         shadow=True, startangle=90)
+# plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+#
+# plt.show()
+a='a|b'
+b =a.split('|')
+print(b)
