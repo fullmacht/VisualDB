@@ -145,14 +145,14 @@ def download_column_names_info(option_box):
             info_for_graf[graf_name] = numbers
         return info_for_graf
     elif type(column_names) == type(str('example')):
-        list_for_download = []
+        # list_for_download = []
         # print(column_names)
         column_names = column_names.split(' | ')
         # for name in column_names:
         #     list_for_download.append(name)
         # list_for_download = list_for_download.split(' | ')
         info_for_graf = {}
-        print(list_for_download)
+        # print(list_for_download)
 
         list_name = column_names[0]
         table_name = column_names[1]
@@ -259,15 +259,16 @@ def clear_message_window():
     app.clearEntry('Пароль от почты')
 
 def insertInfo():
-    db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
-    # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-    #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-    conDb = postgresql.open(db)
-    d4 = str(app.getOptionBox('Таблица для ввода'))
-    e5 = str(app.getOptionBox('Столбец для ввода'))
-    f6 = str(app.getEntry('Данные'))
-    a1 = 'INSERT INTO' + ' ' + d4 + '(' + e5 + ')' + ' ' + 'VALUES' + ' ' + '(' + f6 + ')'
-    conDb.execute(a1)
+    # download_column_names_info()
+    con_db = connect_to_db()
+    column_names = str(app.getOptionBox('Список колонн для ввода'))
+    column_names = column_names.split(' | ')
+    table_name = column_names[1]
+    column_name = column_names[0]
+    # e5 = str(app.getOptionBox('Столбец для ввода'))
+    data = str(app.getEntry('Данные'))
+    sql_code = 'INSERT INTO' + ' ' + table_name + '(' + column_name + ')' + ' ' + 'VALUES' + ' ' + '(' + data + ')'
+    con_db.execute(sql_code)
 
 
 def clear_DB_settings_window():
@@ -282,7 +283,7 @@ def clear_DB_settings_window():
 def select_table_info(option_box_text_area):
     info = download_column_names_info(option_box=option_box_text_area)
     for name,value in info.items():
-        message = str(app.getOptionBox(option_box_text_area)) + ':' + '\n' + '\n' + str(value) + '\n' + '\n'
+        message = str(app.getOptionBox(option_box_text_area)) + ':' + '\n' + '\n' + str(value)[1:-1] + '\n' + '\n'
     # app.clearTextArea('Показать данные')
     app.setTextArea('Показать данные', message)
 
@@ -324,6 +325,7 @@ def push(btn):
         clear_DB_settings_window()
         app.hideSubWindow('Настройки подключения к БД')
     elif btn == 'Выход из настроек':
+        clear_DB_settings_window()
         app.hideSubWindow('Настройки подключения к БД')
     # elif btn == 'Очистить поля':
     #     clear_DB_settings_window()
@@ -430,7 +432,6 @@ app.startSubWindow('Настройки подключения к БД', 'Нас�
                    transient=True,
                    grouped=True)
 # Кнопки
-app.addButtons(['Подключиться к БД', 'Очистить поля', 'Выход из настроек', ], push)
 # Названия строк
 app.addLabelEntry('Имя пользователя')
 app.addLabelSecretEntry('Пароль')
@@ -447,31 +448,33 @@ app.setEntryDefault('Port', 'Введите PORT')
 app.setEntryDefault('Название БД', 'Введите название БД')
 # Устанавливает курсор на строке ввода
 app.setFocus('Имя пользователя')
+
+app.addButtons(['Подключиться к БД', 'Выход из настроек', ], push)
 # Устанавливает размер окна
-app.setSize('Fullscreen')
+# app.setSize('Fullscreen')
 #app.exitFullscreen()
 app.stopSubWindow()
 
 # Окно показа данных
 app.startSubWindow('Показать данные', 'Показать данные', modal=False, blocking=False, transient=True, )
 # app.setSize('Fullscreen')
-app.addButtons(['Вывод данных'], push)
-app.setFont(20)
 app.addLabelOptionBox('Список колонн', 'Данные не загрузились')
-# app.addLabelOptionBox('Столбец', mess)
 app.addTextArea(title='Показать данные', text='')
-app.addButtons(['Очистить окно', 'Закрыть'], push)
+# app.addButtons(['Вывод данных'], push)
+app.setFont(20)
+# app.addLabelOptionBox('Столбец', mess)
+app.addButtons(['Вывод данных','Очистить окно', 'Закрыть'], push)
 #app.exitFullscreen()
 app.stopSubWindow()
 
 # Окно ввода данных
 app.startSubWindow('Окно ввода данных', 'Окно ввода данных')
 # app.setSize('Fullscreen')
+app.addLabelOptionBox('Список колонн для ввода', 'Данные не загрузились')
 app.addLabelEntry('Данные')
 app.setEntryDefault('Данные', 'Введите данные')
 app.setFocus('Данные')
 app.addButtons(['Ввести данные', 'Зактрыть окно'], push)
-app.addLabelOptionBox('Список колонн для ввода', 'Данные не загрузились')
 # app.addLabelOptionBox('Столбец для ввода', mess)
 #app.exitFullscreen()
 app.stopSubWindow()
