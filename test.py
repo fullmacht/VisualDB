@@ -39,9 +39,9 @@ def timeSt():
 #     pass
 def connect_to_db():
     try:
-        # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-        #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
-        db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
+        db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+            'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+        # db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
         con_db = postgresql.open(db)
     except postgresql.exceptions.ClientCannotConnectError:
     # Здесь к каждой ошибке создаём свое окно errorBox
@@ -453,7 +453,7 @@ def percentComplete():
     global left
     global count
     if left < 100:
-        left += 100
+        left += 50
         if left == 100 and count == 0:
             app.show()
             app.hideSubWindow('Загрузка')
