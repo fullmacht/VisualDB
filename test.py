@@ -196,6 +196,8 @@ def pie_plot(option_box_x,option_box_y,option_box_z):
     info_z = download_column_names_info(option_box=option_box_z)
     value_list = []
     name_list = []
+    if info_x == {} and info_y == {} and info_z == {}:
+        app.warningBox('Предупреждение!', 'Вы не выбрали информацию для графика Pie!')
     for name_x, value_x in info_x.items():
         for name_y, value_y in info_y.items():
             for name_z, value_z in info_z.items():
@@ -268,6 +270,14 @@ def plot_3d(option_box_x,option_box_y,option_box_z):
     info_x = download_column_names_info(option_box=option_box_x)
     info_y = download_column_names_info(option_box=option_box_y)
     info_z = download_column_names_info(option_box=option_box_z)
+    if info_x == {} and info_y == {} and info_z == {}:
+        app.warningBox('Предупреждение!', 'Вы не выбрали информацию для графика 3D!')
+    if info_x == {}:
+        app.warningBox('Предупреждение!', 'Вы не указали столбец для данных Оси X!')
+    if info_y == {}:
+        app.warningBox('Предупреждение!', 'Вы не указали столбец для данных Оси Y!')
+    if info_z == {}:
+        app.warningBox('Предупреждение!', 'Вы не указали столбец для данных Оси Z!')
     l=[]
     for name_x,x in info_x.items():
         for name_y,y in info_y.items():
