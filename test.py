@@ -455,6 +455,7 @@ def percentComplete():
     if left < 100:
         left += 50
         if left == 100 and count == 0:
+            # app.showSplash('VisualDB', fill='blue', stripe='black', fg='white', font=44)
             app.show()
             app.hideSubWindow('Загрузка')
             count += 1
@@ -483,7 +484,7 @@ app = gui('VisualDB',useTtk=True)
 app.setTtkTheme("elegance")
 
 # Временное окно входа в программу
-# app.showSplash('VisualDB', fill='blue', stripe='black', fg='white', font=44)
+app.showSplash('VisualDB', fill='blue', stripe='black', fg='white', font=44)
 
 # Окно загрузки
 app.startSubWindow('Загрузка','Загрузка')
