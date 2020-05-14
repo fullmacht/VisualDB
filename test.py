@@ -11,6 +11,7 @@ from datetime import tzinfo, timedelta, datetime, timezone
 
 con_db = ''
 count = 0
+left = 80
 
 
 class UTC025(tzinfo):
@@ -38,17 +39,17 @@ def timeSt():
 #     pass
 def connect_to_db():
     try:
-        db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
-            'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+        # db = 'pq://' + app.getEntry('Имя пользователя') + ':' + app.getEntry('Пароль') + '@' + app.getEntry(
+        #     'IP') + ':' + app.getEntry('Port') + '/' + app.getEntry('Название БД')
+        db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
         con_db = postgresql.open(db)
     except postgresql.exceptions.ClientCannotConnectError:
     # Здесь к каждой ошибке создаём свое окно errorBox
         app.errorBox('Результат', 'Неверные данные подключения')
 
     else:
-        app.infoBox('Результат', 'Покдключение к БД установлено')
+        # app.infoBox('Результат', 'Покдключение к БД установлено')
         app.hideSubWindow('Настройки подключения к БД')
-    # db = 'pq://' + 'postgres' + ':' + '1234' + '@' + 'localhost' + ':' + '5432' + '/' + 'postgres'
         return con_db
 
 
@@ -189,14 +190,25 @@ def download_column_names_info(option_box):
     return info_for_graf
 
 
-def pie_plot(option_box_x):
-    info = download_column_names_info(option_box=option_box_x)
+def pie_plot(option_box_x,option_box_y,option_box_z):
+    info_x = download_column_names_info(option_box=option_box_x,)
+    info_y = download_column_names_info(option_box=option_box_y)
+    info_z = download_column_names_info(option_box=option_box_z)
     value_list = []
     name_list = []
-    for name, value in info.items():
-        value = sum(value)
-        value_list.append(value)
-        name_list.append(name)
+    for name_x, value_x in info_x.items():
+        for name_y, value_y in info_y.items():
+            for name_z, value_z in info_z.items():
+                value_x = sum(value_x)
+                value_y = sum(value_y)
+                value_z = sum(value_z)
+                value_list.append(value_x,)
+                value_list.append(value_y)
+                value_list.append(value_z)
+                name_list.append(name_x,)
+                name_list.append(name_y,)
+                name_list.append(name_z)
+    print(value_list,name_list)
     plt.subplots()
     plt.pie(value_list, explode=None, labels=name_list, autopct='%1.1f%%',
                 shadow=True, startangle=90)
@@ -207,21 +219,44 @@ def pie_plot(option_box_x):
     im = Image.open(app.getOptionBox('Тип графика') + '.png')
     im.save(app.getOptionBox('Тип графика') + '.ppm')
     app.reloadImage("grafik", app.getOptionBox('Тип графика') + '.ppm')
+    app.reloadImage("Zoom", app.getOptionBox('Тип графика') + '.ppm')
 
 
-def plot(option_box_x, option_box_y):
+def plot(option_box_x, option_box_y,option_box_z):
     info_x = download_column_names_info(option_box=option_box_x)
     info_y= download_column_names_info(option_box=option_box_y)
-    # x = [1,2,3,4,5,6,7]
+    info_z= download_column_names_info(option_box=option_box_z)
+    print(info_y)
+    if info_x == {}:
+        app.warningBox('Предупреждение!', 'Вы не указали столбец для данных Оси X!')
+    if info_y == {} and info_z == {}:
+        app.warningBox('Предупреждение!', 'Вы не указали столбец для данных Оси Y!')
+    if info_y =={}:
+        n = len(list(info_x.values())[0])
+        listofzeros = [0] * n
+        info_y = {'': listofzeros}
+    if info_z =={}:
+        n = len(list(info_x.values())[0])
+        listofzeros = [0] * n
+        info_z = {'': listofzeros}
     l = []
+    print(info_y)
+    name_yz = ''
+    # info_list = [info_y,info_z]
     for name_x,value_x in info_x.items():
         for name_y,value_y in info_y.items():
-            a = plt.plot(value_x, value_y,label=name_y)
-            plt.xlabel(name_x)
-            plt.title('График')
-            plt.grid(True)
-            plt.legend()
-            l.append(a)
+            for name_z,value_z in info_z.items():
+            # for name in info_list.
+                xy_plot = plt.plot(value_x, value_y,label=name_y)
+                xz_plot = plt.plot(value_x, value_z,label=name_z)
+                name_yz += name_y + ' ' + name_z
+                plt.xlabel(name_x)
+                plt.ylabel(name_yz)
+                plt.title('График')
+                plt.grid(True)
+                plt.legend()
+                l.append(xy_plot)
+                l.append(xz_plot)
     plt.savefig(app.getOptionBox('Тип графика') + '.png')
     im = Image.open(app.getOptionBox('Тип графика') + '.png')
     im.save(app.getOptionBox('Тип графика') + '.ppm')
@@ -317,7 +352,7 @@ def clear_DB_settings_window():
 def select_table_info(option_box_text_area):
     info = download_column_names_info(option_box=option_box_text_area)
     for name,value in info.items():
-        message = str(app.getOptionBox(option_box_text_area)) + ':' + '\n' + '\n' + str(value)[1:-1] + '\n' + '\n'
+        message = str(app.getOptionBox(option_box_text_area)) + ':' + '\n' + '\n' + str(value)[1:-1] + '\n' + '\n' + 'Всего записей {}'.format(len(value))
     # app.clearTextArea('Показать данные')
     app.setTextArea('Показать данные', message)
 
@@ -336,14 +371,14 @@ def push(btn):
         download_column_names_list(btn)
     elif btn == 'Построить график':
         if app.getOptionBox('Тип графика') == "Plot":
-            try:
-                plot(option_box_x='Список колонн X',option_box_y='Список колонн Y')
+            # try:
+                plot(option_box_x='Список колонн X',option_box_y='Список колонн Y', option_box_z='Список колонн Z')
                 app.showSubWindow('grafik')
-            except ValueError:
-                app.errorBox('Ошибка!', 'Размерность данных для графика не совпадает!')
+            # except ValueError:
+            #     app.errorBox('Ошибка!', 'Размерность данных для графика не совпадает!')
         elif app.getOptionBox('Тип графика') == 'Pie':
 
-            pie_plot(option_box_x='Список колонн X')
+            pie_plot(option_box_x='Список колонн X',option_box_y='Список колонн Y',option_box_z='Список колонн Z')
             app.showSubWindow('grafik')
         elif app.getOptionBox('Тип графика') == '3D':
             plot_3d(option_box_x='Список колонн X',option_box_y='Список колонн Y',option_box_z='Список колонн Z')
@@ -402,7 +437,7 @@ counter = 10
 
 
 
-left = 95
+
 
 def percentComplete():
     global left
@@ -418,7 +453,7 @@ def percentComplete():
             app.hideSubWindow('Загрузка')
             # print(left)
             left = 101
-        print(left,count)
+        # print(left,count)
     #     left = 0
     # elif count > 0 and left == 100:
     #     # left = 0
